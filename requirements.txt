@@ -10,15 +10,15 @@ charset-normalizer==3.4.1
 click==8.1.8
 colour==0.1.5
 comm==0.2.2
-contourpy @ file:///Users/runner/miniforge3/conda-bld/contourpy_1731428368116/work
-cycler @ file:///home/conda/feedstock_root/build_artifacts/cycler_1733332471406/work
+contourpy==1.3.1
+cycler==0.12.1
 decorator==5.2.1
 earthengine-api==1.5.7
 eerepr==0.1.1
 exceptiongroup==1.2.2
 executing==2.2.0
 folium==0.19.5
-fonttools @ file:///Users/runner/miniforge3/conda-bld/fonttools_1738940364185/work
+fonttools==4.57.0
 future==1.0.0
 geemap==0.35.3
 geocoder==1.38.1
@@ -48,20 +48,20 @@ jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 jupyter-leaflet==0.19.2
 jupyterlab_widgets==3.0.13
-kiwisolver @ file:///Users/runner/miniforge3/conda-bld/kiwisolver_1725459273855/work
+kiwisolver==1.4.8
 MarkupSafe==3.0.2
 matplotlib==3.10.1
 matplotlib-inline==0.1.7
 munkres==1.1.4
 narwhals==1.31.0
 nbconvert==7.16.5
-numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1742254848515/work/dist/numpy-2.2.4-cp310-cp310-macosx_11_0_arm64.whl#sha256=94a622e32fc67e411fa056c25a3a57569f22816dc86d5e6bce73f7a9fd739b12
-packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1733203243479/work
-pandas @ file:///Users/runner/miniforge3/conda-bld/pandas_1726878435917/work
+numpy==2.2.4
+packaging==24.2
+pandas==2.2.3
 parso==0.8.4
-patsy @ file:///home/conda/feedstock_root/build_artifacts/patsy_1733792384640/work
+patsy==1.0.1
 pexpect==4.9.0
-pillow @ file:///Users/runner/miniforge3/conda-bld/pillow_1735929731714/work
+pillow==11.1.0
 plotly==6.0.1
 prompt_toolkit==3.0.50
 proto-plus==1.26.1
@@ -74,36 +74,36 @@ pyasn1_modules==0.4.1
 pydeck==0.9.1
 Pygments==2.19.1
 pyogrio==0.10.0
-pyparsing @ file:///home/conda/feedstock_root/build_artifacts/pyparsing_1735698276679/work
+pyparsing==3.2.3
 pyperclip==1.9.0
 pyproj==3.7.1
 pyshp==2.3.1
 python-box==7.3.2
-python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1733215673016/work
-pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1706886791323/work
+python-dateutil==2.9.0.post0
+pytz==2025.2
 ratelim==0.1.6
 referencing==0.36.2
 requests==2.32.3
 rpds-py==0.23.1
 rsa==4.9
-scipy @ file:///Users/runner/miniforge3/conda-bld/scipy-split_1739790705989/work/dist/scipy-1.15.2-cp310-cp310-macosx_11_0_arm64.whl#sha256=7edcf528c303a2d0aa5afa5be176589f18a84d21a8d85f1972553ab95cab0933
+scipy==1.15.2
 scooby==0.10.0
-seaborn @ file:///home/conda/feedstock_root/build_artifacts/seaborn-split_1733730015268/work
+seaborn==0.13.2
 shapely==2.0.7
-six @ file:///home/conda/feedstock_root/build_artifacts/six_1733380938961/work
+six==1.17.0
 smmap==5.0.2
 stack-data==0.6.3
-statsmodels @ file:///Users/runner/miniforge3/conda-bld/statsmodels_1727986736668/work
+statsmodels==0.14.4
 streamlit==1.43.2
 tenacity==9.0.0
 tinycss2==1.2.1
 toml==0.10.2
-tornado @ file:///Users/runner/miniforge3/conda-bld/tornado_1732615966791/work
+tornado==6.4.2
 traitlets==5.14.3
 traittypes==0.2.1
 typing_extensions==4.12.2
-tzdata @ file:///home/conda/feedstock_root/build_artifacts/python-tzdata_1742745135198/work
-unicodedata2 @ file:///Users/runner/miniforge3/conda-bld/unicodedata2_1736692581912/work
+tzdata==2025.2
+unicodedata2==16.0.0
 uritemplate==4.1.1
 urllib3==2.3.0
 wcwidth==0.2.13
