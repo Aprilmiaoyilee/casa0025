@@ -112,3 +112,4 @@ xyzservices==2025.1.0
 streamlit-folium
 scikit-learn
 pyarrow
+mapclassify
