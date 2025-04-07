@@ -614,7 +614,7 @@ with col2_original:
             # st.markdown(london_boroughs_over_65_ee)
 
             # now we're going to add this to the map
-            st.dataframe(london_boroughs_over_65_df)
+            # st.dataframe(london_boroughs_over_65_df)
 
 
             
