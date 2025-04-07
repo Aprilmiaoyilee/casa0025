@@ -23,6 +23,11 @@ def mask_s2_clouds(image):
 
   return image.updateMask(mask).divide(10000)
 
+
+
+# adding geemap.Map() as the first thing for the app
+geemap.Map()
+
 import ee
 import streamlit as st
 import geemap
