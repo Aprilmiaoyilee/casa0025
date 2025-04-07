@@ -49,7 +49,7 @@ st.title("Google Earth Engine - Demo application")
 os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["refresh_token"]
 token = st.secrets["google_earth_engine"]["refresh_token"]
 # adding geemap.Map() as the first thing for the app
-geemap.ee_initialize(token)
+geemap.ee_initialize()
 
 # cache variables
 
