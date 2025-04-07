@@ -99,7 +99,7 @@ col1_original, col2_original = st.columns([2,12])
 with col1_original:
     collection = st.selectbox("Select satellite image collection", ["NAIP", "Landsat","Sentinel-2","NDVI London","Nitrogen","Temperature","Population","Index"])
 
-    os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["refresh_token"]
+    os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["token"]
 
     # Initialize Earth Engine - should authenticate automatically using credentials
     # Authenticate and initialize
