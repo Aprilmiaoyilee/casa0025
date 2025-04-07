@@ -105,6 +105,8 @@ with col1_original:
     # Authenticate using the service account
     ee.Initialize(project=service_account_info)
 
+    st.success("Successfully authenticated with Google Earth Engine")
+
 with col2_original:
     if collection == "NAIP":
         # Define the map center and zoom level
