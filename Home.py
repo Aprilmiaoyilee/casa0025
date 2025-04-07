@@ -580,7 +580,11 @@ with col2_original:
 
 
             # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
-            london_boroughs_over_65 = gp.read_file('data/london_percentage_of_population_over_65.geojson').head(10).to_crs(4326)
+            london_lsoa_over_65_gdf = pd.read_parquet('data/london_percentage_of_population_over_65.parquet.gzip')
+            # convert the wkt geometry to a shapely geometry
+            london_lsoa_over_65_gdf["geometry"] = london_lsoa_over_65_gdf["geometry"].apply(shapely.wkt.loads)
+            # convert this to a geodataframe
+            london_lsoa_over_65_gdf = gp.GeoDataFrame(london_lsoa_over_65_gdf, geometry="geometry", crs=4326)
             
             with open('data/london_percentage_of_population_over_65.geojson') as f:
                  london_boroughs_over_65_geojson = json.load(f)
@@ -660,7 +664,12 @@ with col2_original:
             # 2️ Convert GeoDataFrame → EE FeatureCollection
             if st.session_state.london_boroughs_over_65 is None:
                 # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
-                london_boroughs_over_65 = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
+                # london_boroughs_over_65 = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
+                london_lsoa_over_65_gdf = pd.read_parquet('data/london_percentage_of_population_over_65.parquet.gzip')
+                # convert the wkt geometry to a shapely geometry
+                london_lsoa_over_65_gdf["geometry"] = london_lsoa_over_65_gdf["geometry"].apply(shapely.wkt.loads)
+                # convert this to a geodataframe
+                london_lsoa_over_65_gdf = gp.GeoDataFrame(london_lsoa_over_65_gdf, geometry="geometry", crs=4326)
 
 
                 # add this to session state
