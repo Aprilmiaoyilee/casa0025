@@ -33,7 +33,10 @@ import geopandas as gp
 import seaborn as sns
 from datetime import datetime, timedelta
 import pandas as pd
-
+import json
+import folium
+from streamlit_folium import st_folium
+from sklearn.preprocessing import MinMaxScaler
 st.set_page_config(
     layout="wide"
 )
@@ -61,11 +64,30 @@ if "fc_results" not in st.session_state:
     st.session_state.fc_results = None
 if "temperature_layer" not in st.session_state:
     st.session_state.temperature_layer = None
-
+if "london_boroughs_over_65" not in st.session_state:
+    st.session_state.london_boroughs_over_65 = None
+if "london_boroughs_over_65_map" not in st.session_state:
+    st.session_state.london_boroughs_over_65_map = None
+if "london_boroughs_over_65_map_key" not in st.session_state:
+    st.session_state.london_boroughs_over_65_map_key = None
+if "lad_data" not in st.session_state:
+    st.session_state.lad_data = None
+if "london_lsoa_over_65_gdf" not in st.session_state:
+    st.session_state.london_lsoa_over_65_gdf = None
+if "gdf_boroughs" not in st.session_state:
+    st.session_state.gdf_boroughs = None
+if "gdf_results" not in st.session_state:
+    st.session_state.gdf_results = None
+if "buildings_data_gdf" not in st.session_state:
+    st.session_state.buildings_data_gdf = None
+if "buildings_data_df" not in st.session_state:
+    st.session_state.buildings_data_df = None
+    
+    
 col1_original, col2_original = st.columns([2,12])
 
 with col1_original:
-    collection = st.selectbox("Select satellite image collection", ["NAIP", "Landsat","Sentinel-2","NDVI London","Nitrogen","Temperature"])
+    collection = st.selectbox("Select satellite image collection", ["NAIP", "Landsat","Sentinel-2","NDVI London","Nitrogen","Temperature","Population","Index"])
 
     os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["refresh_token"]
 
@@ -527,24 +549,320 @@ with col2_original:
             }
 
 
+            # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
+            london_boroughs_over_65 = gp.read_file('data/london_percentage_of_population_over_65.geojson').head(10).to_crs(4326)
+            
+            with open('data/london_percentage_of_population_over_65.geojson') as f:
+                 london_boroughs_over_65_geojson = json.load(f)
+            # maybe I can convert the geodatafraame to a geojson and then to an df
+            london_boroughs_over_65_df = geemap.geojson_to_df(london_boroughs_over_65_geojson).head(10)
+            london_boroughs_over_65_df["total_pop_over_65_years_old"] = london_boroughs_over_65_df["total_pop_over_65_years_old"].astype(int)
+            # st.write(type(london_boroughs_over_65_df))
 
+            # ee_fc = geemap.gdf_to_ee(london_boroughs_over_65)  # Requires geemap >= 0.29.0 [3]
+
+            # choropleth_style = {
+            #                     'fillColor': {
+            #                         'property': 'total_pop_over_65_years_old',  # Target column
+            #                         'palette': ['blue', 'limegreen', 'red'],  # Color gradient
+            #                     },
+            #                     'color': 'black',
+            #                     # 'fillOpacity': 0.7,
+            #                     'width': 1
+            #                 }
+
+            # styled_layer = ee_fc.style(**choropleth_style)  # Apply styling [3]
+
+            
+            # london_boroughs_over_65.columns = [x.lower() for x in london_boroughs_over_65.columns]
+            # london_boroughs_over_65 = london_boroughs_over_65[["geography","total_pop_over_65_years_old","geometry"]]
+            # london_boroughs_over_65_ee = geemap.geopandas_to_ee(london_boroughs_over_65, geodesic=False)
+            # st.markdown(london_boroughs_over_65_ee)
+
+            # now we're going to add this to the map
+            st.dataframe(london_boroughs_over_65_df)
+
+
+            
+            
 
 
             m = geemap.Map()
             m.add_basemap("CartoDB.Positron")
             m.set_center(london_midpoint_longitude, london_midpoint_latitude, 10)
             m.add_layer(temperature_layer, visualization, 'Surface temperature')
-            m.add_colorbar(
-                    visualization,
-                    label="Surface temperature",
-                    layer_name="Surface temperature",
-                    orientation="vertical",
-                    transparent_bg=True,
-                
-                )
 
+            # we're going to add the london boroughs over 65 to the map
+            m.add_data(
+                data=london_boroughs_over_65_df,
+                column='total_pop_over_65_years_old',
+                cmap='Blues',
+                scheme='Quantiles',
+                # legend_title='Population over 65',
+            )
+            # m.add_gdf(
+            #     london_boroughs_over_65,
+            #     layer_name='London Boroughs over 65',
+            #     column='total_pop_over_65_years_old',  # Column to style by
+            #     cmap='YlOrRd',                         # Color map
+            #     scheme='Quantiles',                    # Classification scheme
+            #     legend_title='Population over 65',     # Legend title
+            # )
+
+            # m.add_colorbar(
+            #         visualization,
+            #         label="Surface temperature",
+            #         layer_name="Surface temperature",
+            #         orientation="vertical",
+            #         transparent_bg=True,
+                
+            #     )
+            
             st.success("Successfully loaded nitrogen data")
             m.to_streamlit(height=600)           
 
             # this is a test commit to the main branch
             
+
+    elif collection == "Population":
+
+        with st.spinner("Loading London Boroughs..."):
+            # 2️ Convert GeoDataFrame → EE FeatureCollection
+            if st.session_state.london_boroughs_over_65 is None:
+                # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
+                london_boroughs_over_65 = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
+
+
+                # add this to session state
+                st.session_state.london_boroughs_over_65 = london_boroughs_over_65
+            else:
+                london_boroughs_over_65 = st.session_state.london_boroughs_over_65
+            
+            # calculate the midpoint of london
+            london_midpoint_latitude, london_midpoint_longitude = london_boroughs_over_65.to_crs(4326).geometry.centroid.y.mean(), london_boroughs_over_65.to_crs(4326).geometry.centroid.x.mean()
+            
+            if st.session_state.london_boroughs_over_65_map is None:
+                # we'll plot this on a folium map
+                m = london_boroughs_over_65.explore("total_pop_over_65_years_old", tiles="CartoDB.Positron", cmap="Blues", scheme="Quantiles", legend_title="Population over 65")
+            
+                # we're going to cache this map as well 
+                st.session_state.london_boroughs_over_65_map = m
+            else:
+                m = st.session_state.london_boroughs_over_65_map
+
+            st.success("Successfully loaded population data")
+            # st_folium(m, width=725)
+            st_folium(m, width=725, returned_objects=[])
+            # m.to_streamlit(height=600)
+
+
+    elif collection == "Index":
+        with st.spinner("Loading the index data..."):
+
+            if st.session_state.lad_data is None:
+            # so the first thing we're going to do is load the lad data
+                gdf_boroughs = gp.read_file(
+                    'data/london_lad.geojson'
+                )#.head(5)
+                # alternatively we can use the lsoa file
+                gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
+                gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
+                st.session_state.gdf_boroughs = gdf_boroughs
+            else:
+                gdf_boroughs = st.session_state.gdf_boroughs
+
+
+            # next we're going to load the population age data 
+
+            if st.session_state.london_boroughs_over_65 is None:
+                # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
+                london_lsoa_over_65_gdf = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
+                
+                # add this to session state
+                st.session_state.london_lsoa_over_65_gdf = london_lsoa_over_65_gdf
+            else:
+                london_lsoa_over_65_gdf = st.session_state.london_lsoa_over_65_gdf
+
+            # calculate the midpoint of london
+            london_midpoint_latitude, london_midpoint_longitude = london_lsoa_over_65_gdf.to_crs(4326).geometry.centroid.y.mean(), london_lsoa_over_65_gdf.to_crs(4326).geometry.centroid.x.mean()
+
+            # next we're going to load in some buildings data
+            if st.session_state.buildings_data_gdf is None:
+                buildings_data_gdf = gp.read_file('data/greater_london_buildings.geojson')
+                st.session_state.buildings_data_gdf = buildings_data_gdf
+            else:
+                buildings_data_gdf = st.session_state.buildings_data_gdf
+
+            # ------------------------------------------------------------
+            # now we're going to use the lad data to get the NDVI
+            if st.session_state.gdf_results is None:
+
+
+                # 2️ Convert GeoDataFrame → EE FeatureCollection
+                ee_boroughs = geemap.geopandas_to_ee(gdf_boroughs, geodesic=False)
+                st.session_state.ee_boroughs = ee_boroughs
+                # 3️ Build Sentinel‑2 NDVI composite
+                sentinel = (
+                    ee.ImageCollection('COPERNICUS/S2_SR')
+                    .filterBounds(ee_boroughs)
+                    .filterDate('2020-06-01', '2020-09-30')
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 10))
+                    .median()
+                    .clip(ee_boroughs)
+                )
+                ndvi = sentinel.normalizedDifference(['B8', 'B4']).rename('NDVI')
+                st.session_state.ndvi = ndvi
+
+                # 4️ Sum NDVI per borough
+                fc_results = ndvi.reduceRegions(
+                    collection=ee_boroughs,
+                    reducer=ee.Reducer.median(),
+                    scale=10,
+                    crs='EPSG:27700'
+                )
+                
+                # 5️⃣Pull results client‑side as GeoJSON → GeoDataFrame
+                geojson = fc_results.getInfo()
+                
+                gdf_results = gp.GeoDataFrame.from_features(geojson['features']).rename(columns={'NAME': 'MSOA Name',"median": "NDVI"})
+                # for ndvi we will need to invert these values 
+                gdf_results["NDVI"] = 1 / gdf_results["NDVI"]
+
+                st.session_state.gdf_results = gdf_results
+            else:
+                gdf_results = st.session_state.gdf_results
+                ndvi = st.session_state.ndvi
+                ee_boroughs = st.session_state.ee_boroughs
+
+            # ------------------------------------------------------------
+            # now we're going to get the temperature data
+
+            # Applies scaling factors.
+            def apply_scale_factors(image):
+                optical_bands = image.select('SR_B.').multiply(0.0000275).add(-0.2)
+                thermal_bands = image.select('ST_B.*').multiply(0.00341802).add(149.0)
+                return image.addBands(optical_bands, None, True).addBands(
+                    thermal_bands, None, True
+                )
+            # now we're going to load the temperature data from Sentinel-5P
+
+
+            dataset = ee.ImageCollection('LANDSAT/LC09/C02/T1_L2').filterDate(
+                        '2022-05-01', '2022-10-31'
+                    )
+            
+            dataset = dataset.map(apply_scale_factors)
+            
+            temperature_layer = dataset.select('ST_B10').median().clip(ee_boroughs)
+
+            st.session_state.temperature_layer = temperature_layer
+
+            # 4️ Sum NDVI per borough
+            temperature_results = temperature_layer.reduceRegions(
+                collection=ee_boroughs,
+                reducer=ee.Reducer.median(),
+                scale=10,
+                crs='EPSG:27700'
+            )
+                       
+            # 5️⃣Pull results client‑side as GeoJSON → GeoDataFrame
+            geojson = temperature_results.getInfo()
+            
+            temperature_gdf_results = gp.GeoDataFrame.from_features(geojson['features']).rename(columns={'NAME': 'MSOA Name',"median": "surface_temperature"})
+            # ------------------------------------------------------------
+            # next we will aggregate the age data to the borough level
+            # do a spatial join between the age data and the lad data 
+
+            london_boroughs_over_65 = london_lsoa_over_65_gdf.to_crs(4326).sjoin(gdf_boroughs.to_crs(4326), how="left")
+            london_boroughs_over_65_gdf = london_boroughs_over_65[["borough_name","total_pop_over_65_years_old"]].groupby("borough_name").sum().reset_index()
+
+            # now we'll add this to the session state
+            st.session_state.london_boroughs_over_65 = london_boroughs_over_65_gdf
+
+            # ------------------------------------------------------------
+            # we're going to get the number of buildings in each borough
+            buildings_data_gdf["building_area"] = buildings_data_gdf.to_crs(27700).geometry.area
+            buildings_data_df = buildings_data_gdf.to_crs(4326).sjoin(gdf_boroughs.to_crs(4326), how="left")
+            # st.write(buildings_data_df.columns)
+            # buildings_data_df = buildings_data_df[["borough_name","osm_id"]].groupby("borough_name").nunique().reset_index().rename(columns={"osm_id":"number_of_buildings"})
+            buildings_data_df = buildings_data_df[["borough_name","building_area"]].groupby("borough_name").sum().reset_index()
+            # make a column where we sum the total area of the boroughs
+            buildings_data_df_area = gdf_boroughs.copy()
+            buildings_data_df_area["area"] = buildings_data_df_area.to_crs(27700).geometry.area
+            # merge buildings_data_df with buildings_data_df_area
+            buildings_data_df = buildings_data_df.merge(buildings_data_df_area[["borough_name","area"]], on="borough_name", how="left")
+            buildings_data_df["building_density"] = buildings_data_df["building_area"] / buildings_data_df["area"]
+            buildings_data_df = buildings_data_df.drop(columns=["area","building_area"])
+            st.session_state.buildings_data_df = buildings_data_df
+
+            # so now we'll check the dataframes we've got so far
+            # st.write("Age dataframe")
+            # st.dataframe(london_boroughs_over_65_gdf)
+            # st.write("LAD dataframe")
+            # st.dataframe(gdf_boroughs)
+            # st.write("NDVI dataframe")
+            # st.dataframe(gdf_results)
+            # st.write("Temperature dataframe")
+            # st.dataframe(temperature_gdf_results)
+            # st.write("Buildings dataframe")
+            # st.dataframe(buildings_data_df)
+
+
+            # now we are going to merge these altogether
+            raw_index_values_gdf_boroughs = gdf_boroughs.merge(london_boroughs_over_65_gdf, on="borough_name", how="left").merge(temperature_gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(buildings_data_df, on="borough_name", how="left")
+
+            # st.write("Merged dataframe")
+            # st.dataframe(raw_index_values_gdf_boroughs)
+
+
+            # okay so now we're going to normalise the data values  using sklearn min max scaler
+            scaler = MinMaxScaler()
+            # first we'll get the columns we want to normalise
+            columns_to_normalise = ["NDVI","surface_temperature","total_pop_over_65_years_old","building_density"]
+
+            for column in columns_to_normalise:
+                raw_index_values_gdf_boroughs[f"{column}_normalised"] = scaler.fit_transform(raw_index_values_gdf_boroughs[[column]])
+
+            # st.write("Normalised dataframe")
+            # st.dataframe(raw_index_values_gdf_boroughs)
+
+
+            # ------------------------------------------------------------
+            normalised_columns = [x for x in raw_index_values_gdf_boroughs.columns if "normalised" in x]
+            for column in normalised_columns:
+                # now we're going to weight this by 25% for each of the normalised values
+                raw_index_values_gdf_boroughs[f"{column}_weighted"] = raw_index_values_gdf_boroughs[column] * 0.25
+
+
+            # st.write("Weighted dataframe")
+            weighted_df = raw_index_values_gdf_boroughs[["borough_name"]+[x for x in raw_index_values_gdf_boroughs.columns if "weighted" in x] + ["geometry"]]
+            # st.dataframe(weighted_df)
+
+            # ------------------------------------------------------------
+            # now lastly we're going to sum these up to get the final index values
+            weighted_df["index_value"] = weighted_df[[x for x in weighted_df.columns if "weighted" in x]].sum(axis=1)
+            weighted_columns = [x for x in weighted_df.columns if "weighted" in x]
+
+            # st.write("Final index dataframe")
+            # st.dataframe(weighted_df)
+
+            # ------------------------------------------------------------
+
+            viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value"] + weighted_columns)
+            if "NDVI" in viz_layer:
+                weighted_df[viz_layer] = 1 / (weighted_df[viz_layer] + 0.01)
+            # now we're going to add this to the map
+            m = weighted_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges", scheme="naturalbreaks", legend_title=viz_layer)
+            # add a layer for each of the weighted columns
+            # for column in weighted_columns:
+            #     weighted_df.explore(column, tiles="CartoDB.Positron", cmap="Oranges", scheme="naturalbreaks", legend_title=column, m=m)
+            st.success("Successfully loaded index data")
+            st_folium(m, width=725, returned_objects=[])
+            
+            
+            
+            
+            
+            
+            
+
