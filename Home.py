@@ -53,6 +53,8 @@ def get_auth():
     # ee.Initialize(credentials)
     return "Successfully authenticated with Google Earth Engine"
 
+get_auth()
+
 st.set_page_config(
     layout="wide"
 )
@@ -62,7 +64,7 @@ st.title("Google Earth Engine - Demo application")
 # token = st.secrets["google_earth_engine"]["refresh_token"]
 # adding geemap.Map() as the first thing for the app
 
-geemap.ee_initialize()
+# geemap.ee_initialize()
 
 # cache variables
 
