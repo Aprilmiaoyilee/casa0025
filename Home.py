@@ -114,7 +114,7 @@ with col1_original:
     service_account_info = st.secrets["google_earth_engine"]["project"]
 
     # Authenticate using the service account
-    # ee.Initialize(project=service_account_info)
+    ee.Initialize(project=service_account_info)
 
     # this is for the streamlit deployed version
 
