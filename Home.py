@@ -713,7 +713,7 @@ with col2_original:
 
             # next we're going to load the population age data 
 
-            if st.session_state.london_boroughs_over_65 is None:
+            if st.session_state.london_lsoa_over_65_gdf is None:
                 # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
                 # london_lsoa_over_65_gdf = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
                 # alternatively this can be loaded from a parquet file
@@ -729,7 +729,7 @@ with col2_original:
                 london_lsoa_over_65_gdf = st.session_state.london_lsoa_over_65_gdf
 
             # calculate the midpoint of london
-            london_midpoint_latitude, london_midpoint_longitude = london_lsoa_over_65_gdf.to_crs(4326).geometry.centroid.y.mean(), london_lsoa_over_65_gdf.to_crs(4326).geometry.centroid.x.mean()
+            london_midpoint_latitude, london_midpoint_longitude = london_lsoa_over_65_gdf.geometry.centroid.y.mean(), london_lsoa_over_65_gdf.geometry.centroid.x.mean()
 
             # next we're going to load in some buildings data
             if st.session_state.buildings_data_gdf is None:
