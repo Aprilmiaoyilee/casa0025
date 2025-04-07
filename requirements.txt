@@ -110,3 +110,4 @@ wcwidth==0.2.13
 widgetsnbextension==4.0.13
 xyzservices==2025.1.0
 streamlit-folium
+scikit-learn
