@@ -46,12 +46,12 @@ st.set_page_config(
 )
 st.title("Google Earth Engine - Demo application")
 
-os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]
+# os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]
 # token = st.secrets["google_earth_engine"]["refresh_token"]
 # adding geemap.Map() as the first thing for the app
 service_account_info = st.secrets["google_earth_engine"]["project"]
 
-geemap.ee_initialize()
+geemap.ee_initialize(project=service_account_info)
 
 # cache variables
 
