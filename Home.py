@@ -47,7 +47,7 @@ from google.oauth2 import service_account
 from ee import oauth
 
 def get_auth():
-    service_account_keys = st.secrets["google_earth_engine"]
+    service_account_keys = st.secrets["ee_keys"]
     credentials = service_account.Credentials.from_service_account_info(service_account_keys, scopes=oauth.SCOPES)
     geemap.ee_initialize(credentials)
     # ee.Initialize(credentials)
