@@ -25,8 +25,7 @@ def mask_s2_clouds(image):
 
 
 import geemap
-# adding geemap.Map() as the first thing for the app
-geemap.Map()
+import os
 
 import ee
 import streamlit as st
@@ -46,6 +45,11 @@ st.set_page_config(
     layout="wide"
 )
 st.title("Google Earth Engine - Demo application")
+
+os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["refresh_token"]
+# adding geemap.Map() as the first thing for the app
+geemap.Map()
+
 
 # cache variables
 
