@@ -682,7 +682,7 @@ with col2_original:
             
             if st.session_state.london_boroughs_over_65_map is None:
                 # we'll plot this on a folium map
-                m = london_boroughs_over_65.explore("total_pop_over_65_years_old", tiles="CartoDB.Positron", cmap="Blues", scheme="Quantiles", legend_title="Population over 65", style_kwds={'weight': 0})
+                m = london_boroughs_over_65.explore("total_pop_over_65_years_old", tiles="CartoDB.Positron", cmap="Blues", scheme="Quantiles", legend_title="Population over 65", style_kwds={'weight': 0.1})
             
                 # we're going to cache this map as well 
                 st.session_state.london_boroughs_over_65_map = m
