@@ -46,7 +46,7 @@ st.set_page_config(
 )
 st.title("Google Earth Engine - Demo application")
 
-os.environ["EARTHENGINE_TOKEN"]# = st.secrets["google_earth_engine"]["EARTHENGINE_TOKEN"]
+# os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["EARTHENGINE_TOKEN"]
 # token = st.secrets["google_earth_engine"]["refresh_token"]
 # adding geemap.Map() as the first thing for the app
 
