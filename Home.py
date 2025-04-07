@@ -580,17 +580,17 @@ with col2_original:
 
 
             # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
-            london_lsoa_over_65_gdf = pd.read_parquet('data/london_percentage_of_population_over_65.parquet.gzip')
-            # convert the wkt geometry to a shapely geometry
-            london_lsoa_over_65_gdf["geometry"] = london_lsoa_over_65_gdf["geometry"].apply(shapely.wkt.loads)
-            # convert this to a geodataframe
-            london_lsoa_over_65_gdf = gp.GeoDataFrame(london_lsoa_over_65_gdf, geometry="geometry", crs=4326)
+            # london_lsoa_over_65_gdf = pd.read_parquet('data/london_percentage_of_population_over_65.parquet.gzip')
+            # # convert the wkt geometry to a shapely geometry
+            # london_lsoa_over_65_gdf["geometry"] = london_lsoa_over_65_gdf["geometry"].apply(shapely.wkt.loads)
+            # # convert this to a geodataframe
+            # london_lsoa_over_65_gdf = gp.GeoDataFrame(london_lsoa_over_65_gdf, geometry="geometry", crs=4326)
             
-            with open('data/london_percentage_of_population_over_65.geojson') as f:
-                 london_boroughs_over_65_geojson = json.load(f)
-            # maybe I can convert the geodatafraame to a geojson and then to an df
-            london_boroughs_over_65_df = geemap.geojson_to_df(london_boroughs_over_65_geojson).head(10)
-            london_boroughs_over_65_df["total_pop_over_65_years_old"] = london_boroughs_over_65_df["total_pop_over_65_years_old"].astype(int)
+            # with open('data/london_percentage_of_population_over_65.geojson') as f:
+            #      london_boroughs_over_65_geojson = json.load(f)
+            # # maybe I can convert the geodatafraame to a geojson and then to an df
+            # london_boroughs_over_65_df = geemap.geojson_to_df(london_boroughs_over_65_geojson).head(10)
+            # london_boroughs_over_65_df["total_pop_over_65_years_old"] = london_boroughs_over_65_df["total_pop_over_65_years_old"].astype(int)
             # st.write(type(london_boroughs_over_65_df))
 
             # ee_fc = geemap.gdf_to_ee(london_boroughs_over_65)  # Requires geemap >= 0.29.0 [3]
@@ -627,13 +627,13 @@ with col2_original:
             m.add_layer(temperature_layer, visualization, 'Surface temperature')
 
             # we're going to add the london boroughs over 65 to the map
-            m.add_data(
-                data=london_boroughs_over_65_df,
-                column='total_pop_over_65_years_old',
-                cmap='Blues',
-                scheme='Quantiles',
-                # legend_title='Population over 65',
-            )
+            # m.add_data(
+            #     data=london_boroughs_over_65_df,
+            #     column='total_pop_over_65_years_old',
+            #     cmap='Blues',
+            #     scheme='Quantiles',
+            #     # legend_title='Population over 65',
+            # )
             # m.add_gdf(
             #     london_boroughs_over_65,
             #     layer_name='London Boroughs over 65',
@@ -665,11 +665,11 @@ with col2_original:
             if st.session_state.london_boroughs_over_65 is None:
                 # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
                 # london_boroughs_over_65 = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
-                london_lsoa_over_65_gdf = pd.read_parquet('data/london_percentage_of_population_over_65.parquet.gzip')
+                london_boroughs_over_65 = pd.read_parquet('data/london_percentage_of_population_over_65.parquet.gzip')
                 # convert the wkt geometry to a shapely geometry
-                london_lsoa_over_65_gdf["geometry"] = london_lsoa_over_65_gdf["geometry"].apply(shapely.wkt.loads)
+                london_boroughs_over_65["geometry"] = london_boroughs_over_65["geometry"].apply(shapely.wkt.loads)
                 # convert this to a geodataframe
-                london_lsoa_over_65_gdf = gp.GeoDataFrame(london_lsoa_over_65_gdf, geometry="geometry", crs=4326)
+                london_boroughs_over_65 = gp.GeoDataFrame(london_boroughs_over_65, geometry="geometry", crs=4326)
 
 
                 # add this to session state
