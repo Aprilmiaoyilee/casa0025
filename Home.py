@@ -41,7 +41,7 @@ import json
 import folium
 from streamlit_folium import st_folium
 from sklearn.preprocessing import MinMaxScaler
-
+import shapely
 # these are the imports to make the website work
 from google.oauth2 import service_account
 from ee import oauth
@@ -706,7 +706,13 @@ with col2_original:
 
             if st.session_state.london_boroughs_over_65 is None:
                 # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
-                london_lsoa_over_65_gdf = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
+                # london_lsoa_over_65_gdf = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
+                # alternatively this can be loaded from a parquet file
+                london_lsoa_over_65_gdf = pd.read_parquet('data/london_percentage_of_population_over_65.parquet.gzip')
+                # convert the wkt geometry to a shapely geometry
+                london_lsoa_over_65_gdf["geometry"] = london_lsoa_over_65_gdf["geometry"].apply(shapely.wkt.loads)
+                # convert this to a geodataframe
+                london_lsoa_over_65_gdf = gp.GeoDataFrame(london_lsoa_over_65_gdf, geometry="geometry", crs=4326)
                 
                 # add this to session state
                 st.session_state.london_lsoa_over_65_gdf = london_lsoa_over_65_gdf
@@ -719,6 +725,17 @@ with col2_original:
             # next we're going to load in some buildings data
             if st.session_state.buildings_data_gdf is None:
                 buildings_data_gdf = gp.read_file('data/greater_london_buildings.geojson')
+
+                # this is being changed to be an iterative load of parquet files
+                buildings_container = []
+                for i in range(11):
+                    int_df = pd.read_parquet(f"data/chunked_greater_london_buildings_chunk_{i+1}.parquet.gzip")
+                    buildings_container.append(int_df)
+                buildings_data_gdf = pd.concat(buildings_container)
+                # use shapely to the wkt geometry to an actual shapely geometry
+                buildings_data_gdf["geometry"] = buildings_data_gdf["geometry"].apply(shapely.wkt.loads)
+                # convert this to a geodataframe
+                buildings_data_gdf = gp.GeoDataFrame(buildings_data_gdf, geometry="geometry", crs=4326)
                 st.session_state.buildings_data_gdf = buildings_data_gdf
             else:
                 buildings_data_gdf = st.session_state.buildings_data_gdf
