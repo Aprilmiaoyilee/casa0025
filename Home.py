@@ -733,7 +733,7 @@ with col2_original:
 
             # next we're going to load in some buildings data
             if st.session_state.buildings_data_gdf is None:
-                buildings_data_gdf = gp.read_file('data/greater_london_buildings.geojson')
+                # buildings_data_gdf = gp.read_file('data/greater_london_buildings.geojson')
 
                 # this is being changed to be an iterative load of parquet files
                 buildings_container = []
