@@ -46,12 +46,11 @@ st.set_page_config(
 )
 st.title("Google Earth Engine - Demo application")
 
-# os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]
+os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["refresh_token"]
 # token = st.secrets["google_earth_engine"]["refresh_token"]
 # adding geemap.Map() as the first thing for the app
-service_account_info = st.secrets["google_earth_engine"]["project"]
 
-geemap.ee_initialize(project=service_account_info)
+geemap.ee_initialize()
 
 # cache variables
 
@@ -117,7 +116,7 @@ with col1_original:
     # ee.Initialize(project=service_account_info)
 
     # this is for the streamlit deployed version
-    geemap.ee_initialize(project=service_account_info)
+    # geemap.ee_initialize(project=service_account_info)
 
     st.success("Successfully authenticated with Google Earth Engine")
 
