@@ -852,16 +852,16 @@ with col2_original:
             st.session_state.buildings_data_df = buildings_data_df
 
             # so now we'll check the dataframes we've got so far
-            # st.write("Age dataframe")
-            # st.dataframe(london_boroughs_over_65_gdf)
-            # st.write("LAD dataframe")
-            # st.dataframe(gdf_boroughs)
-            # st.write("NDVI dataframe")
-            # st.dataframe(gdf_results)
-            # st.write("Temperature dataframe")
-            # st.dataframe(temperature_gdf_results)
-            # st.write("Buildings dataframe")
-            # st.dataframe(buildings_data_df)
+            st.write("Age dataframe")
+            st.dataframe(london_boroughs_over_65_gdf)
+            st.write("LAD dataframe")
+            st.dataframe(gdf_boroughs)
+            st.write("NDVI dataframe")
+            st.dataframe(gdf_results)
+            st.write("Temperature dataframe")
+            st.dataframe(temperature_gdf_results)
+            st.write("Buildings dataframe")
+            st.dataframe(buildings_data_df)
 
 
             # now we are going to merge these altogether
@@ -879,8 +879,8 @@ with col2_original:
             for column in columns_to_normalise:
                 raw_index_values_gdf_boroughs[f"{column}_normalised"] = scaler.fit_transform(raw_index_values_gdf_boroughs[[column]])
 
-            # st.write("Normalised dataframe")
-            # st.dataframe(raw_index_values_gdf_boroughs)
+            st.write("Normalised dataframe")
+            st.dataframe(raw_index_values_gdf_boroughs)
 
 
             # ------------------------------------------------------------
@@ -890,17 +890,17 @@ with col2_original:
                 raw_index_values_gdf_boroughs[f"{column}_weighted"] = raw_index_values_gdf_boroughs[column] * 0.25
 
 
-            # st.write("Weighted dataframe")
+            st.write("Weighted dataframe")
             weighted_df = raw_index_values_gdf_boroughs[["borough_name"]+[x for x in raw_index_values_gdf_boroughs.columns if "weighted" in x] + ["geometry"]]
-            # st.dataframe(weighted_df)
+            st.dataframe(weighted_df)
 
             # ------------------------------------------------------------
             # now lastly we're going to sum these up to get the final index values
             weighted_df["index_value"] = weighted_df[[x for x in weighted_df.columns if "weighted" in x]].sum(axis=1)
             weighted_columns = [x for x in weighted_df.columns if "weighted" in x]
 
-            # st.write("Final index dataframe")
-            # st.dataframe(weighted_df)
+            st.write("Final index dataframe")
+            st.dataframe(weighted_df)
 
             # ------------------------------------------------------------
 
