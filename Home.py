@@ -708,7 +708,12 @@ with col2_original:
 
             m = geemap.Map()
             m.add_basemap("CartoDB.Positron")
-            m.set_center(london_midpoint_longitude, london_midpoint_latitude, 10)
+            # if selected aggregation level is LAD then we'll use the london midpoint
+            if st.session_state.aggregation_level == "LAD":
+                m.set_center(london_midpoint_longitude, london_midpoint_latitude, 10)
+            else:
+                m.set_center(london_midpoint_longitude, london_midpoint_latitude, 14)
+
             m.add_layer(temperature_layer, visualization, 'Surface temperature')
 
             # we're going to add the london boroughs over 65 to the map
