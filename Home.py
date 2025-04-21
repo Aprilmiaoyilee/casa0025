@@ -116,7 +116,7 @@ with col1_original:
     aggregation_level = st.selectbox("Select aggregation level", ["LAD","Council"])
 
     if aggregation_level == "Council":
-        selected_council = st.selectbox("Select council", [""]+st.session_state.gdf_boroughs["lad11nm"].unique().tolist())
+        selected_council = st.selectbox("Select council", [""]+gp.read_file("data/london_lad.geojson")["lad11nm"].unique().tolist())
         # the user must select a council
         if selected_council == "":
             st.error("Please select a council")
@@ -550,7 +550,7 @@ with col2_original:
                     gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
                     gdf_boroughs = gdf_boroughs[["LSOA11CD","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
                     st.session_state.gdf_boroughs = gdf_boroughs
-                    
+
                 gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
                 gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
                 ee_boroughs = geemap.geopandas_to_ee(gdf_boroughs, geodesic=False)
