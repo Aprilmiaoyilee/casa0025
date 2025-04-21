@@ -481,11 +481,44 @@ with col2_original:
         # 2️ Convert GeoDataFrame → EE FeatureCollection
 
             if st.session_state.ee_boroughs is None:
-                gdf_boroughs = gp.read_file(
-                    'data/london_lad.geojson'
-                )#.head(5)
+
+                # this is the old code that we're going to replace with the new code
+                # ------------------------------------------------------------
+                # gdf_boroughs = gp.read_file(
+                #     'data/london_lad.geojson'
+                # )#.head(5)
+                # gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
+                # gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
+                # ee_boroughs = geemap.geopandas_to_ee(gdf_boroughs, geodesic=False)
+
+                # ------------------------------------------------------------
+
+
+                # check to see what level of aggregation the user has selected
+                # if they select LAD then proceed with the following code
+                if aggregation_level == "LAD":
+                    # so the first thing we're going to do is load the lad data
+                    gdf_boroughs = gp.read_file(
+                        'data/london_lad.geojson'
+                    )#.head(5)
+                    # alternatively we can use the lsoa file
+                    gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
+                    gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
+                    st.session_state.gdf_boroughs = gdf_boroughs
+                elif aggregation_level == "Council":
+                    # load the lsoa level geometries
+                    gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
+                    # convert the wkt geometry to a shapely geometry
+                    gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
+                    # convert this to a geodataframe
+                    gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
+                    # filter the LAD11NM column to match the users  
+                    gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
+                    gdf_boroughs = gdf_boroughs[["LSOA11CD","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
+                    st.session_state.gdf_boroughs = gdf_boroughs
+
                 gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
-                gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
+                # gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
                 ee_boroughs = geemap.geopandas_to_ee(gdf_boroughs, geodesic=False)
 
                 # calculate the midpoint of london
