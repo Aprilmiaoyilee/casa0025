@@ -780,17 +780,25 @@ with col2_original:
             # next we're going to load in some buildings data
             if st.session_state.buildings_data_gdf is None:
                 # buildings_data_gdf = gp.read_file('data/greater_london_buildings.geojson')
-
+                # this was the old code for loading the buildings data
+                # ------------------------------------------------------------
                 # this is being changed to be an iterative load of parquet files
-                buildings_container = []
-                for i in range(11):
-                    int_df = pd.read_parquet(f"data/chunked_greater_london_buildings_chunk_{i+1}.parquet.gzip")
-                    buildings_container.append(int_df)
-                buildings_data_gdf = pd.concat(buildings_container)
-                # use shapely to the wkt geometry to an actual shapely geometry
-                buildings_data_gdf["geometry"] = buildings_data_gdf["geometry"].apply(shapely.wkt.loads)
-                # convert this to a geodataframe
-                buildings_data_gdf = gp.GeoDataFrame(buildings_data_gdf, geometry="geometry", crs=4326)
+                # buildings_container = []
+                # for i in range(11):
+                #     int_df = pd.read_parquet(f"data/chunked_greater_london_buildings_chunk_{i+1}.parquet.gzip")
+                #     buildings_container.append(int_df)
+                # buildings_data_gdf = pd.concat(buildings_container)
+                # # use shapely to the wkt geometry to an actual shapely geometry
+                # buildings_data_gdf["geometry"] = buildings_data_gdf["geometry"].apply(shapely.wkt.loads)
+                # # convert this to a geodataframe
+                # buildings_data_gdf = gp.GeoDataFrame(buildings_data_gdf, geometry="geometry", crs=4326)
+                # ------------------------------------------------------------
+                # this is the new code for loading the buildings data
+
+                buildings_data_gdf = gp.read_file('data/lsoa_bmd_from paul.geojson')
+
+
+
                 st.session_state.buildings_data_gdf = buildings_data_gdf
             else:
                 buildings_data_gdf = st.session_state.buildings_data_gdf
@@ -927,19 +935,28 @@ with col2_original:
             st.session_state.london_boroughs_over_65 = london_boroughs_over_65_gdf
 
             # ------------------------------------------------------------
+            # this is the old code for getting the number of buildings in each borough
+            # ------------------------------------------------------------
             # we're going to get the number of buildings in each borough
-            buildings_data_gdf["building_area"] = buildings_data_gdf.to_crs(27700).geometry.area
+            # buildings_data_gdf["building_area"] = buildings_data_gdf.to_crs(27700).geometry.area
+            # buildings_data_df = buildings_data_gdf.to_crs(4326).sjoin(gdf_boroughs.to_crs(4326), how="left")
+            # # st.write(buildings_data_df.columns)
+            # # buildings_data_df = buildings_data_df[["borough_name","osm_id"]].groupby("borough_name").nunique().reset_index().rename(columns={"osm_id":"number_of_buildings"})
+            # buildings_data_df = buildings_data_df[["borough_name","building_area"]].groupby("borough_name").sum().reset_index()
+            # # make a column where we sum the total area of the boroughs
+            # buildings_data_df_area = gdf_boroughs.copy()
+            # buildings_data_df_area["area"] = buildings_data_df_area.to_crs(27700).geometry.area
+            # # merge buildings_data_df with buildings_data_df_area
+            # buildings_data_df = buildings_data_df.merge(buildings_data_df_area[["borough_name","area"]], on="borough_name", how="left")
+            # buildings_data_df["building_density"] = buildings_data_df["building_area"] / buildings_data_df["area"]
+            # buildings_data_df = buildings_data_df.drop(columns=["area","building_area"])
+            # ------------------------------------------------------------
+            # this is the new code for getting the number of buildings in each borough
+            # ------------------------------------------------------------
             buildings_data_df = buildings_data_gdf.to_crs(4326).sjoin(gdf_boroughs.to_crs(4326), how="left")
-            # st.write(buildings_data_df.columns)
-            # buildings_data_df = buildings_data_df[["borough_name","osm_id"]].groupby("borough_name").nunique().reset_index().rename(columns={"osm_id":"number_of_buildings"})
-            buildings_data_df = buildings_data_df[["borough_name","building_area"]].groupby("borough_name").sum().reset_index()
-            # make a column where we sum the total area of the boroughs
-            buildings_data_df_area = gdf_boroughs.copy()
-            buildings_data_df_area["area"] = buildings_data_df_area.to_crs(27700).geometry.area
-            # merge buildings_data_df with buildings_data_df_area
-            buildings_data_df = buildings_data_df.merge(buildings_data_df_area[["borough_name","area"]], on="borough_name", how="left")
-            buildings_data_df["building_density"] = buildings_data_df["building_area"] / buildings_data_df["area"]
-            buildings_data_df = buildings_data_df.drop(columns=["area","building_area"])
+            buildings_data_df["building_density"] = buildings_data_df["bldg_dens"]
+
+
             st.session_state.buildings_data_df = buildings_data_df
 
             # so now we'll check the dataframes we've got so far
