@@ -287,7 +287,7 @@ with col2_original:
                 ndvi_vis = {
                     'min': 0.0,
                     'max': 1.0,
-                    'palette': ['red', 'yellow', 'green']
+                    'palette': ['blue', 'lightblue', 'white', 'green']
                 }
                 m.addLayer(ndvi, ndvi_vis, 'NDVI')
 
