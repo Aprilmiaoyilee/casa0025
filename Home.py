@@ -564,7 +564,7 @@ with col2_original:
                     st.session_state.gdf_boroughs = gdf_boroughs
 
                 gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
-                gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
+                # gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
                 ee_boroughs = geemap.geopandas_to_ee(gdf_boroughs, geodesic=False)
 
                 # calculate the midpoint of london
