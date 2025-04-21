@@ -130,7 +130,13 @@ with col1_original:
         else:
             st.session_state.selected_council = selected_council
 
-    collection = st.selectbox("Select satellite image collection", ["NAIP", "Landsat","Sentinel-2","NDVI London","Nitrogen","Temperature","Population","Index"])
+    collection = st.selectbox("Select satellite image collection", ["","NAIP", "Landsat","Sentinel-2","NDVI London","Nitrogen","Temperature","Population","Index"])
+    # the user must select a collection
+    if collection == "":
+        st.error("Please select a collection")
+        st.stop()
+    else:
+        st.session_state.collection = collection
 
     # os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["refresh_token"]
 
