@@ -115,7 +115,14 @@ with col1_original:
 
     aggregation_level = st.selectbox("Select aggregation level", ["LAD","Council"])
 
-
+    if aggregation_level == "Council":
+        selected_council = st.selectbox("Select council", [""]+st.session_state.gdf_boroughs["lad11nm"].unique().tolist())
+        # the user must select a council
+        if selected_council == "":
+            st.error("Please select a council")
+            st.stop()
+        else:
+            st.session_state.selected_council = selected_council
 
     collection = st.selectbox("Select satellite image collection", ["NAIP", "Landsat","Sentinel-2","NDVI London","Nitrogen","Temperature","Population","Index"])
 
@@ -521,9 +528,29 @@ with col2_original:
             # 2️ Convert GeoDataFrame → EE FeatureCollection
 
             if st.session_state.ee_boroughs is None:
-                gdf_boroughs = gp.read_file(
-                    'data/london_lad.geojson'
-                )#.head(5)
+                # check to see what level of aggregation the user has selected
+                # if they select LAD then proceed with the following code
+                if st.session_state.aggregation_level == "LAD":
+                    # so the first thing we're going to do is load the lad data
+                    gdf_boroughs = gp.read_file(
+                        'data/london_lad.geojson'
+                    )#.head(5)
+                    # alternatively we can use the lsoa file
+                    gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
+                    gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
+                    st.session_state.gdf_boroughs = gdf_boroughs
+                elif st.session_state.aggregation_level == "Council":
+                    # load the lsoa level geometries
+                    gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
+                    # convert the wkt geometry to a shapely geometry
+                    gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
+                    # convert this to a geodataframe
+                    gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
+                    # filter the LAD11NM column to match the users  
+                    gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
+                    gdf_boroughs = gdf_boroughs[["LSOA11CD","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
+                    st.session_state.gdf_boroughs = gdf_boroughs
+                    
                 gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
                 gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
                 ee_boroughs = geemap.geopandas_to_ee(gdf_boroughs, geodesic=False)
@@ -745,14 +772,32 @@ with col2_original:
         with st.spinner("Loading the index data..."):
 
             if st.session_state.lad_data is None:
-            # so the first thing we're going to do is load the lad data
-                gdf_boroughs = gp.read_file(
-                    'data/london_lad.geojson'
-                )#.head(5)
-                # alternatively we can use the lsoa file
-                gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
-                gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
-                st.session_state.gdf_boroughs = gdf_boroughs
+
+                # check to see what level of aggregation the user has selected
+                # if they select LAD then proceed with the following code
+                if st.session_state.aggregation_level == "LAD":
+                    # so the first thing we're going to do is load the lad data
+                    gdf_boroughs = gp.read_file(
+                        'data/london_lad.geojson'
+                    )#.head(5)
+                    # alternatively we can use the lsoa file
+                    gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
+                    gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
+                    st.session_state.gdf_boroughs = gdf_boroughs
+                elif st.session_state.aggregation_level == "Council":
+                    # load the lsoa level geometries
+                    gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
+                    # convert the wkt geometry to a shapely geometry
+                    gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
+                    # convert this to a geodataframe
+                    gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
+                    # filter the LAD11NM column to match the users  
+                    gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
+                    gdf_boroughs = gdf_boroughs[["LSOA11CD","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
+                    st.session_state.gdf_boroughs = gdf_boroughs
+
+
+
             else:
                 gdf_boroughs = st.session_state.gdf_boroughs
 
