@@ -1147,6 +1147,18 @@ with col2_original:
             #     weighted_df.explore(column, tiles="CartoDB.Positron", cmap="Oranges", scheme="naturalbreaks", legend_title=column, m=m)
             st.success("Successfully loaded index data")
             st_folium(m, width=725, returned_objects=[])
+
+
+            # ── create CSV in memory ──
+            csv_bytes = weighted_df.to_csv(index=False).encode("utf-8")          # simplest way
+
+            # ── download button ──
+            st.download_button(
+                label="Download CSV",
+                data=csv_bytes,        # or csv_buffer
+                file_name=f"Index_data.csv",
+                mime="text/csv"
+            )
             
             
             
