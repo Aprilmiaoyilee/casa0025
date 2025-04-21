@@ -536,7 +536,7 @@ with col2_original:
             if st.session_state.ee_boroughs is None:
                 # check to see what level of aggregation the user has selected
                 # if they select LAD then proceed with the following code
-                if st.session_state.aggregation_level == "LAD":
+                if aggregation_level == "LAD":
                     # so the first thing we're going to do is load the lad data
                     gdf_boroughs = gp.read_file(
                         'data/london_lad.geojson'
@@ -545,7 +545,7 @@ with col2_original:
                     gdf_boroughs.columns = [x.lower() for x in gdf_boroughs.columns]
                     gdf_boroughs = gdf_boroughs[["lad11nm","geometry"]].rename(columns={"lad11nm":"borough_name"})
                     st.session_state.gdf_boroughs = gdf_boroughs
-                elif st.session_state.aggregation_level == "Council":
+                elif aggregation_level == "Council":
                     # load the lsoa level geometries
                     gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
                     # convert the wkt geometry to a shapely geometry
