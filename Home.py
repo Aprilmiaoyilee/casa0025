@@ -956,6 +956,7 @@ with col2_original:
             buildings_data_df = buildings_data_gdf.to_crs(4326).sjoin(gdf_boroughs.to_crs(4326), how="left")
             buildings_data_df = buildings_data_df[["borough_name","bldg_dens"]].groupby("borough_name").sum().reset_index()
             buildings_data_df["building_density"] = buildings_data_df["bldg_dens"]
+            buildings_data_df = buildings_data_df.drop(columns=["bldg_dens"])
 
 
             st.session_state.buildings_data_df = buildings_data_df
