@@ -112,6 +112,11 @@ if "buildings_data_df" not in st.session_state:
 col1_original, col2_original = st.columns([2,12])
 
 with col1_original:
+
+    aggregation_level = st.selectbox("Select aggregation level", ["LAD","Council"])
+
+
+
     collection = st.selectbox("Select satellite image collection", ["NAIP", "Landsat","Sentinel-2","NDVI London","Nitrogen","Temperature","Population","Index"])
 
     # os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["refresh_token"]
@@ -766,6 +771,8 @@ with col2_original:
                     .median()
                     .clip(ee_boroughs)
                 )
+
+                # this was the default code for the NDVI
                 ndvi = sentinel.normalizedDifference(['B8', 'B4']).rename('NDVI')
                 st.session_state.ndvi = ndvi
 
@@ -785,6 +792,12 @@ with col2_original:
                 gdf_results["NDVI"] = 1 / gdf_results["NDVI"]
 
                 st.session_state.gdf_results = gdf_results
+
+
+
+
+
+
             else:
                 gdf_results = st.session_state.gdf_results
                 ndvi = st.session_state.ndvi
@@ -793,23 +806,60 @@ with col2_original:
             # ------------------------------------------------------------
             # now we're going to get the temperature data
 
-            # Applies scaling factors.
-            def apply_scale_factors(image):
-                optical_bands = image.select('SR_B.').multiply(0.0000275).add(-0.2)
-                thermal_bands = image.select('ST_B.*').multiply(0.00341802).add(149.0)
-                return image.addBands(optical_bands, None, True).addBands(
-                    thermal_bands, None, True
-                )
-            # now we're going to load the temperature data from Sentinel-5P
+            # this was the boilerplate version
+            
+
+            # # Applies scaling factors.
+            # def apply_scale_factors(image):
+            #     optical_bands = image.select('SR_B.').multiply(0.0000275).add(-0.2)
+            #     thermal_bands = image.select('ST_B.*').multiply(0.00341802).add(149.0)
+            #     return image.addBands(optical_bands, None, True).addBands(
+            #         thermal_bands, None, True
+            #     )
+            # # now we're going to load the temperature data from Sentinel-5P
 
 
-            dataset = ee.ImageCollection('LANDSAT/LC09/C02/T1_L2').filterDate(
-                        '2022-05-01', '2022-10-31'
-                    )
+            # dataset = ee.ImageCollection('LANDSAT/LC09/C02/T1_L2').filterDate(
+            #             '2022-05-01', '2022-10-31'
+            #         )
             
-            dataset = dataset.map(apply_scale_factors)
+            # dataset = dataset.map(apply_scale_factors)
             
-            temperature_layer = dataset.select('ST_B10').median().clip(ee_boroughs)
+            # temperature_layer = dataset.select('ST_B10').median().clip(ee_boroughs)
+
+            # ------------------------------------------------------------
+
+            # this is the new code developed by Miayi and Dennis 
+            # function to apply scaling factors
+            def applyScaleFactors(image):
+                opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2)
+                thermalBands = image.select('ST_B.*').multiply(0.00341802).add(149.0)
+                return image.addBands(opticalBands, None, True) \
+                .addBands(thermalBands, None, True)
+
+
+            # function to convert LST from K to °C
+            def celsius(image):
+                subtract = image.subtract(273.1)
+                return subtract
+            
+            # load the data and apply the relevant filters and functions
+            #.filter(ee.Filter.calendarRange(6, 9,'month')) \  may apply a similar seasonal filter here
+            landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2') \
+            .filterDate('2021-01-01', '2024-12-31') \
+            .filterBounds(ee_boroughs) \
+            .filter(ee.Filter.lt("CLOUD_COVER", 15)) \
+            .map(applyScaleFactors) \
+            .select('ST_B10').map(celsius) \
+            .reduce(ee.Reducer.median()) \
+            .clip(ee_boroughs)
+
+
+            # mask out water in London to detect more accurate LST result
+            # Generate a water mask.
+            water = ee.Image("JRC/GSW1_4/GlobalSurfaceWater").select("occurrence")
+            notWater = water.mask().Not()
+            temperature_layer = landsat.updateMask(notWater)
 
             st.session_state.temperature_layer = temperature_layer
 
