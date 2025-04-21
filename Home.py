@@ -954,6 +954,7 @@ with col2_original:
             # this is the new code for getting the number of buildings in each borough
             # ------------------------------------------------------------
             buildings_data_df = buildings_data_gdf.to_crs(4326).sjoin(gdf_boroughs.to_crs(4326), how="left")
+            buildings_data_df = buildings_data_df[["borough_name","bldg_dens"]].groupby("borough_name").sum().reset_index()
             buildings_data_df["building_density"] = buildings_data_df["bldg_dens"]
 
 
