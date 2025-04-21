@@ -712,7 +712,7 @@ with col2_original:
             if st.session_state.aggregation_level == "LAD":
                 m.set_center(london_midpoint_longitude, london_midpoint_latitude, 10)
             else:
-                m.set_center(london_midpoint_longitude, london_midpoint_latitude, 14)
+                m.set_center(london_midpoint_longitude, london_midpoint_latitude, 12)
 
             m.add_layer(temperature_layer, visualization, 'Surface temperature')
 
