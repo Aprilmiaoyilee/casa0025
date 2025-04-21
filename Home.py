@@ -114,6 +114,7 @@ col1_original, col2_original = st.columns([2,12])
 with col1_original:
 
     aggregation_level = st.selectbox("Select aggregation level", ["LAD","Council"])
+    st.session_state.aggregation_level = aggregation_level
 
     if aggregation_level == "Council":
         selected_council = st.selectbox("Select council", [""]+gp.read_file("data/london_lad.geojson")["lad11nm"].unique().tolist())
