@@ -1085,16 +1085,16 @@ with col2_original:
             st.session_state.buildings_data_df = buildings_data_df
 
             # so now we'll check the dataframes we've got so far
-            st.write("Age dataframe")
-            st.dataframe(london_boroughs_over_65_gdf)
-            st.write("LAD dataframe")
-            st.dataframe(gdf_boroughs)
-            st.write("NDVI dataframe")
-            st.dataframe(gdf_results)
-            st.write("Temperature dataframe")
-            st.dataframe(temperature_gdf_results)
-            st.write("Buildings dataframe")
-            st.dataframe(buildings_data_df)
+            # st.write("Age dataframe")
+            # st.dataframe(london_boroughs_over_65_gdf)
+            # st.write("LAD dataframe")
+            # st.dataframe(gdf_boroughs)
+            # st.write("NDVI dataframe")
+            # st.dataframe(gdf_results)
+            # st.write("Temperature dataframe")
+            # st.dataframe(temperature_gdf_results)
+            # st.write("Buildings dataframe")
+            # st.dataframe(buildings_data_df)
 
 
             # now we are going to merge these altogether
@@ -1133,7 +1133,7 @@ with col2_original:
             weighted_columns = [x for x in weighted_df.columns if "weighted" in x]
 
             st.write("Final index dataframe")
-            st.dataframe(weighted_df)
+            st.dataframe(weighted_df.rename(columns={"borough_name":"Location"}).drop(columns=["geometry"]))
 
             # ------------------------------------------------------------
 
