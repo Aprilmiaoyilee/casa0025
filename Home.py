@@ -107,9 +107,12 @@ if "buildings_data_gdf" not in st.session_state:
     st.session_state.buildings_data_gdf = None
 if "buildings_data_df" not in st.session_state:
     st.session_state.buildings_data_df = None
-    
-    
+
+
+
 col1_original, col2_original = st.columns([2,12])
+
+
 
 with col1_original:
 
@@ -138,6 +141,8 @@ with col1_original:
     else:
         st.session_state.collection = collection
 
+
+
     # os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["refresh_token"]
 
     # Initialize Earth Engine - should authenticate automatically using credentials
@@ -160,6 +165,7 @@ with col1_original:
     st.success("Successfully authenticated with Google Earth Engine")
 
 with col2_original:
+
     if collection == "NAIP":
         # Define the map center and zoom level
         center = [40, -100]
@@ -666,7 +672,7 @@ with col2_original:
 
             # ------------------------------------------------------------
 
-            # this is the new code developed by Miayi and Dennis 
+            # this is the new code developed by Miayi and Dennis
             # function to apply scaling factors
             def applyScaleFactors(image):
                 opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2)
@@ -1141,14 +1147,69 @@ with col2_original:
             if "NDVI" in viz_layer:
                 weighted_df[viz_layer] = 1 / (weighted_df[viz_layer] + 0.01)
             # now we're going to add this to the map
-            m = weighted_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges", scheme="naturalbreaks", legend_title=viz_layer)
+            # m = weighted_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges", scheme="naturalbreaks", legend_title=viz_layer)
             # add a layer for each of the weighted columns
             # for column in weighted_columns:
             #     weighted_df.explore(column, tiles="CartoDB.Positron", cmap="Oranges", scheme="naturalbreaks", legend_title=column, m=m)
             st.success("Successfully loaded index data")
-            st_folium(m, width=725, returned_objects=[])
+            # st_folium(m, width=725, returned_objects=[])
 
+            # Create visualization components
+            viz_col1, viz_col2 = st.columns([7, 3])
 
+            # Create visualization components
+            viz_col1, viz_col2 = st.columns([7, 3])
+
+            # Display the map in the first column
+            with viz_col1:
+                # Create the map here instead
+                m = weighted_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges",
+                                        scheme="naturalbreaks", legend_title=viz_layer)
+                st_folium(m, width=725, returned_objects=[])
+
+            # Display the bar chart in the second column to show top 10 index rankings
+            with viz_col2:
+                # Aggregation level
+                if st.session_state.aggregation_level == "LAD":
+                    st.write("Top 10 Boroughs by Index Value")
+                    label_column = "borough_name"
+                    xlabel = "Index Value"
+                else:  # Council level
+                    st.write(f"Top 10 LSOAs in {selected_council} by Index Value")
+                    label_column = "borough_name"  # actually LSOA11CD
+                    xlabel = "Index Value"
+
+                import matplotlib.pyplot as plt
+
+                # Sort the data for better visualization and take top 10
+                sorted_df = weighted_df.sort_values("index_value", ascending=False).head(10)
+
+                # Create the bar chart
+                fig, ax = plt.subplots(figsize=(4, 5))
+                ax.barh(sorted_df[label_column], sorted_df["index_value"], color="#FF4500", height=0.6)
+                ax.set_xlabel(xlabel)
+                ax.tick_params(axis='y', labelsize=8)
+                plt.tight_layout()
+
+                # Display the chart
+                st.pyplot(fig)
+
+                # Add descriptive text below the chart
+                st.markdown("""
+                ### About the Index
+                This heat vulnerability index combines 4 key factors:
+                - NDVI (vegetation coverage)
+                - Surface temperature (heat exposure)
+                - Elderly population (vulnerable demographic)
+                - Building density (urban heat island effect)
+                
+    
+                """)
+
+            # Add an index explanation
+            st.markdown("""
+            Each factor is weighted equally (25%) and the weight can be adjusted for user preference.
+            """)
             # ── create CSV in memory ──
             csv_bytes = weighted_df.to_csv(index=False).encode("utf-8")          # simplest way
 
@@ -1157,13 +1218,17 @@ with col2_original:
                 label="Download CSV",
                 data=csv_bytes,        # or csv_buffer
                 file_name=f"Index_data.csv",
-                mime="text/csv"
+                mime="text/csv",
+                key="download_csv_button"
             )
-            
-            
-            
-            
-            
+
+
+
+
+
+
+
+
             
             
 
