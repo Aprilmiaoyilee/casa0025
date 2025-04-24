@@ -1149,7 +1149,7 @@ with col2_original:
             viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value"] + weighted_columns)
             if "NDVI" in viz_layer:
                 weighted_df[viz_layer] = 1 / (weighted_df[viz_layer] + 0.01)
-            # now we're going to add this to the map
+            # now we're going to add this to the map # comment this as this has been moved under the viz_col1 below
             # m = weighted_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges", scheme="naturalbreaks", legend_title=viz_layer)
             # add a layer for each of the weighted columns
             # for column in weighted_columns:
@@ -1159,10 +1159,7 @@ with col2_original:
 
             # Create visualization components
             viz_col1, viz_col2 = st.columns([7, 3])
-
-            # Create visualization components
-            viz_col1, viz_col2 = st.columns([7, 3])
-
+          
             # Display the map in the first column
             with viz_col1:
                 # Create the map here instead
