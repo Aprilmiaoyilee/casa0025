@@ -56,10 +56,12 @@ def get_auth():
 
 get_auth()
 
+
 st.set_page_config(
     layout="wide"
 )
 st.title("Google Earth Engine - Demo application")
+st.text_area("App Purpose", "This app is calculating a heat vulnerability index at two levels, LADs and LSOAs. \n It combines lst, ndvi, building densities and the proportion of residents aged 65 and above.", height=68, disabled=True)
 
 # os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["EARTHENGINE_TOKEN"]
 # token = st.secrets["google_earth_engine"]["refresh_token"]
@@ -149,7 +151,7 @@ with col1_original:
     #     ee.Initialize()
 
     # Load credentials from Streamlit secrets
-    service_account_info = st.secrets["google_earth_engine"]["project"]
+    #service_account_info = st.secrets["google_earth_engine"]["project"]
 
     # Authenticate using the service account
     # ee.Initialize(project=service_account_info)
@@ -1001,7 +1003,7 @@ with col2_original:
 
             # ------------------------------------------------------------
 
-            # this is the new code developed by Miayi and Dennis 
+            # this is the new code developed by Miaoyi and Dennis
             # function to apply scaling factors
             def applyScaleFactors(image):
                 opticalBands = image.select('SR_B.').multiply(0.0000275).add(-0.2)
@@ -1018,7 +1020,8 @@ with col2_original:
             # load the data and apply the relevant filters and functions
             #.filter(ee.Filter.calendarRange(6, 9,'month')) \  may apply a similar seasonal filter here
             landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2') \
-            .filterDate('2021-01-01', '2024-12-31') \
+            .filterDate('2022-01-01', '2024-12-31') \
+            .filter(ee.Filter.calendarRange(6, 9, 'month'))\
             .filterBounds(ee_boroughs) \
             .filter(ee.Filter.lt("CLOUD_COVER", 15)) \
             .map(applyScaleFactors) \
@@ -1035,7 +1038,7 @@ with col2_original:
 
             st.session_state.temperature_layer = temperature_layer
 
-            # 4️ Sum NDVI per borough
+            # 4️ Sum LST per borough
             temperature_results = temperature_layer.reduceRegions(
                 collection=ee_boroughs,
                 reducer=ee.Reducer.median(),
