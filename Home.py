@@ -203,7 +203,7 @@ with col1_original:
                                                                         "NDVI",
                                                                         "Temperature",
                                                                         "Population",
-                                                                        "Building Density"
+                                                                        "Building Density",
                                                                         "Index"]
                                                                         )
         # the user must select a collection
