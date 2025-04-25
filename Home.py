@@ -1428,18 +1428,18 @@ with col1_original:
                         # Aggregation level
                         if st.session_state.aggregation_level == "LAD":
                             st.write("Top 10 Priority Boroughs")
-                            label_column = "borough_name"
+                            label_column = "Location"
                             xlabel = "Index Value"
                         else:  # Council level
                             st.write(f"Top 10 Priority Areas in {selected_council} ")
-                            label_column = "borough_name"  # actually LSOA11CD
+                            label_column = "Location"  # actually LSOA11CD
                             xlabel = "Index Value"
 
                         import matplotlib.pyplot as plt
 
 
                         # Sort the data for better visualization and take top 10
-                        # viz_layer = [x for x in weighted_df.columns if viz_layer.split(" ")[0].lower() in x][0]
+                        viz_layer = [x for x in weighted_df.columns if viz_layer.split(" ")[0].lower() in x][0]
                         sorted_df = weighted_df.sort_values(viz_layer, ascending=False).head(10)
 
                         # Create the bar chart
