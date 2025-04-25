@@ -1371,7 +1371,7 @@ with col1_original:
                     # now lastly we're going to sum these up to get the final index values
                     weighted_df["index_value"] = weighted_df[[x for x in weighted_df.columns if "weighted" in x]].sum(axis=1)
                     # rescale one more time to ensure the values are between 0 and 1
-                    weighted_df["index_value"] = scaler.fit_transform(weighted_df[["index_value"]])
+                    # weighted_df["index_value"] = scaler.fit_transform(weighted_df[["index_value"]])
 
                     weighted_columns = [x for x in weighted_df.columns if "weighted" in x]
 
@@ -1410,6 +1410,8 @@ with col1_original:
 
                         # for the index_value column, round to 2 decimal places
                         weighted_df["index_value"] = weighted_df["index_value"].round(2)
+                        # make a new column with the index value rank
+                        weighted_df["index_value_rank"] = weighted_df["index_value"].rank(method="min")
                         # update the viz_layer
                         weighted_df.rename(columns={"borough_name":"Location"}, inplace=True)
 
