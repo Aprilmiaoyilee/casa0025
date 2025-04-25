@@ -1407,6 +1407,9 @@ with col1_original:
                                 # round the normalised values to 2 decimal places
                                 weighted_df[column] = weighted_df[column].round(2)
                                 weighted_df = weighted_df.rename(columns={column: column.split("_normalised")[0].replace("_"," ").title()})
+
+                        # for the index_value column, round to 2 decimal places
+                        weighted_df["index_value"] = weighted_df["index_value"].round(2)
                         # update the viz_layer
                         weighted_df.rename(columns={"borough_name":"Location"}, inplace=True)
 
