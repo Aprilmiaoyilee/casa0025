@@ -922,7 +922,9 @@ with col1_original:
 
 
                         # load the lsoa level geometries
-                        gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
+                        # gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
+                        gdf_lsoas = pd.read_parquet('data/LSOA2021-Version5-London.parquet')
+                        st.write(gdf_lsoas)
                         # convert the wkt geometry to a shapely geometry
                         gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
                         # convert this to a geodataframe
