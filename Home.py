@@ -1064,7 +1064,6 @@ with col1_original:
                             gdf_boroughs = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
                             gdf_boroughs = gdf_boroughs[["LSOA21CD","geometry"]].rename(columns={"LSOA21CD":"borough_name"})
                             gdf_boroughs = gdf_boroughs.drop_duplicates(subset=["borough_name"])
-                            st.write(gdf_boroughs)
                             st.session_state.gdf_boroughs = gdf_boroughs
 
 
@@ -1279,16 +1278,16 @@ with col1_original:
                     st.session_state.buildings_data_df = buildings_data_df
 
                     # so now we'll check the dataframes we've got so far
-                    st.write("Age dataframe")
-                    st.dataframe(london_boroughs_over_65_gdf)
-                    st.write("LAD dataframe")
-                    st.dataframe(gdf_boroughs)
-                    st.write("NDVI dataframe")
-                    st.dataframe(gdf_results)
-                    st.write("Temperature dataframe")
-                    st.dataframe(temperature_gdf_results)
-                    st.write("Buildings dataframe")
-                    st.dataframe(buildings_data_df)
+                    # st.write("Age dataframe")
+                    # st.dataframe(london_boroughs_over_65_gdf)
+                    # st.write("LAD dataframe")
+                    # st.dataframe(gdf_boroughs)
+                    # st.write("NDVI dataframe")
+                    # st.dataframe(gdf_results)
+                    # st.write("Temperature dataframe")
+                    # st.dataframe(temperature_gdf_results)
+                    # st.write("Buildings dataframe")
+                    # st.dataframe(buildings_data_df)
 
 
                     # now we are going to merge these altogether
@@ -1380,7 +1379,7 @@ with col1_original:
                         # TM version of the bar chart as using ax is getting some odd results
                         fig = plt.figure(figsize=(4, 5))
                         ax = plt.gca()
-                        sorted_df.set_index(label_column).index_value.plot(kind="barh", color="#FF4500", ax=ax)
+                        sorted_df.set_index(label_column).index_value.sort_values(ascending=True).plot(kind="barh", color="#FF4500", ax=ax)
                         plt.xlabel("Locations")
                         plt.tight_layout()
 
