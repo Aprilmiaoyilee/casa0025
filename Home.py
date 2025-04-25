@@ -45,6 +45,7 @@ import shapely
 # these are the imports to make the website work
 from google.oauth2 import service_account
 from ee import oauth
+import time
 
 def get_auth():
     service_account_keys = st.secrets["ee_keys"]
@@ -239,8 +240,13 @@ with col1_original:
 
     # this is for the streamlit deployed version
     # geemap.ee_initialize(project=service_account_info)
+
+    message_placeholder = st.empty()
+
     if collection != "":
-        st.success("Successfully authenticated with Google Earth Engine")
+        message_placeholder.success("Successfully authenticated with Google Earth Engine")
+        time.sleep(2)
+        message_placeholder.empty()
 
 
         with col2_original:
@@ -447,7 +453,9 @@ with col1_original:
                             'width': 1
                         }), {}, 'Borough boundaries')
                         
-                        st.success("Successfully collected data from GEE")
+                        message_placeholder.success("Successfully collected data from GEE")
+                        time.sleep(2)
+                        message_placeholder.empty()
 
 
                         m.to_streamlit(height=600)
@@ -704,7 +712,9 @@ with col1_original:
                         
                         )
 
-                    st.success("Successfully loaded nitrogen data")
+                    message_placeholder.success("Successfully loaded nitrogen data")
+                    time.sleep(2)
+                    message_placeholder.empty()
                     m.to_streamlit(height=600)
 
 
@@ -904,7 +914,9 @@ with col1_original:
                         
                     #     )
                     
-                    st.success("Successfully loaded nitrogen data")
+                    message_placeholder.success("Successfully loaded nitrogen data")
+                    time.sleep(2)
+                    message_placeholder.empty()
                     m.to_streamlit(height=600)           
 
                     # this is a test commit to the main branch
@@ -1028,7 +1040,9 @@ with col1_original:
                         m = st.session_state.buildings_data_map
                     
                     
-                    st.success("Successfully loaded building density data")
+                    message_placeholder.success("Successfully loaded building density data")
+                    time.sleep(2)
+                    message_placeholder.empty()
                     # st_folium(m, width=725)
                     st_folium(m, width=725, returned_objects=[])
 
@@ -1293,8 +1307,8 @@ with col1_original:
                     # now we are going to merge these altogether
                     raw_index_values_gdf_boroughs = gdf_boroughs.merge(london_boroughs_over_65_gdf, on="borough_name", how="left").merge(temperature_gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(buildings_data_df, on="borough_name", how="left")
                     raw_index_values_gdf_boroughs.columns = [x.lower() for x in raw_index_values_gdf_boroughs.columns]
-                    st.write("Merged dataframe")
-                    st.dataframe(raw_index_values_gdf_boroughs)
+                    # st.write("Merged dataframe")
+                    # st.dataframe(raw_index_values_gdf_boroughs)
 
 
                     # okay so now we're going to normalise the data values  using sklearn min max scaler
@@ -1338,7 +1352,9 @@ with col1_original:
                     # add a layer for each of the weighted columns
                     # for column in weighted_columns:
                     #     weighted_df.explore(column, tiles="CartoDB.Positron", cmap="Oranges", scheme="naturalbreaks", legend_title=column, m=m)
-                    st.success("Successfully loaded index data")
+                    message_placeholder.success("Successfully loaded index data")
+                    time.sleep(2)
+                    message_placeholder.empty()
                     # st_folium(m, width=725, returned_objects=[])
 
                     # Create visualization components
