@@ -970,8 +970,6 @@ with col1_original:
                     gdf_boroughs["LSOA_CD"] = gdf_boroughs["LSOA11CD"].astype(str)
                     gdf_boroughs = gdf_boroughs[["LSOA11CD"]].rename(columns={"LSOA11CD":"LSOA_CD"})
 
-                    st.write(gdf_boroughs)
-                    st.write(buildings_data_gdf)
 
                     # do a spatial join to get the building density data for the selected council
                     buildings_data_gdf = buildings_data_gdf.merge(gdf_boroughs, on="LSOA_CD")
