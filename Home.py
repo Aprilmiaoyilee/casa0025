@@ -931,6 +931,9 @@ with col1_original:
                         gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
                         gdf_boroughs = gdf_boroughs[["LSOA11CD"]].rename(columns={"LSOA11CD":"geography code"})
 
+                        st.write(gdf_boroughs)
+                        st.write(london_boroughs_over_65)
+
 
                         # do a spatial join to get the building density data for the selected council
                         london_boroughs_over_65 = london_boroughs_over_65.merge(gdf_boroughs, on="geography code")
