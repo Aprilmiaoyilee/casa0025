@@ -661,7 +661,9 @@ with col1_original:
             elif collection == "Temperature":
                 with st.spinner("Loading London Boroughs..."):
                     # 2️ Convert GeoDataFrame → EE FeatureCollection
-
+                    today = datetime.now().strftime("%Y-%m-%d")
+                    # then we're going to get the today's date a year ago
+                    one_year_ago = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
                     if st.session_state.ee_boroughs is None:
                         # check to see what level of aggregation the user has selected
                         # if they select LAD then proceed with the following code
@@ -700,33 +702,6 @@ with col1_original:
                         london_midpoint_latitude = st.session_state.london_midpoint_latitude
                         london_midpoint_longitude = st.session_state.london_midpoint_longitude
 
-
-
-                    # ------------------------------------------------------------
-                    # this is the boilerplate version
-                    # Applies scaling factors.
-                    # def apply_scale_factors(image):
-                    #     optical_bands = image.select('SR_B.').multiply(0.0000275).add(-0.2)
-                    #     thermal_bands = image.select('ST_B.*').multiply(0.00341802).add(149.0)
-                    #     return image.addBands(optical_bands, None, True).addBands(
-                    #         thermal_bands, None, True
-                    #     )
-                    # # now we're going to load the temperature data from Sentinel-5P
-
-
-                    # dataset = ee.ImageCollection('LANDSAT/LC09/C02/T1_L2').filterDate(
-                    #             '2022-05-01', '2022-10-31'
-                    #         )
-                    
-                    # dataset = dataset.map(apply_scale_factors)
-                    
-                    # temperature_layer = dataset.select('ST_B10').median().clip(ee_boroughs)
-
-                    # st.session_state.temperature_layer = temperature_layer
-
-
-
-                    # ------------------------------------------------------------
 
                     # this is the new code developed by Miayi and Dennis
                     # function to apply scaling factors
