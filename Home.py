@@ -77,6 +77,10 @@ st.set_page_config(
 st.title("Google Earth Engine - Demo application")
 st.text_area("App Purpose", "This app is calculating a heat vulnerability index at two levels, LADs and LSOAs. \n It combines lst, ndvi, building densities and the proportion of residents aged 65 and above.", height=68, disabled=True)
 
+if st.button("Reset App"):
+    st.session_state.clear()  # This clears all session state variables
+    st.rerun()  # This reruns the entire app
+
 # os.environ["EARTHENGINE_TOKEN"] = st.secrets["google_earth_engine"]["EARTHENGINE_TOKEN"]
 # token = st.secrets["google_earth_engine"]["refresh_token"]
 # adding geemap.Map() as the first thing for the app
@@ -84,6 +88,7 @@ st.text_area("App Purpose", "This app is calculating a heat vulnerability index 
 # geemap.ee_initialize()
 
 # cache variables
+
 
 # Initialize session state variables
 if 'gdf_results' not in st.session_state:
@@ -234,9 +239,7 @@ with col1_original:
     # geemap.ee_initialize(project=service_account_info)
     if collection != "":
         st.success("Successfully authenticated with Google Earth Engine")
-        if st.button("Reset App"):
-            st.session_state.clear()  # This clears all session state variables
-            st.rerun()  # This reruns the entire app
+
 
         with col2_original:
 
