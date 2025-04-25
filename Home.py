@@ -135,6 +135,14 @@ with col1_original:
         else:
             st.session_state.selected_council = selected_council
 
+    date_range_selection = st.selectbox("Would you like to select a custom date range?", ["Yes","No"])
+    if date_range_selection == "Yes":
+        user_selected_start_date = st.date_input("Select start date", value=datetime.now() - timedelta(days=365*3))
+        user_selected_end_date = st.date_input("Select end date", value=datetime.now())
+    else:
+        user_selected_start_date = None
+        user_selected_end_date = None
+
     collection = st.selectbox("Select satellite image collection", ["",
                                                                     # "NAIP",
                                                                     # "Landsat",
