@@ -1365,8 +1365,9 @@ with col1_original:
 
                         import matplotlib.pyplot as plt
 
+
                         # Sort the data for better visualization and take top 10
-                        sorted_df = weighted_df.sort_values("index_value", ascending=False).head(10)
+                        sorted_df = weighted_df.sort_values(viz_layer, ascending=False).head(10)
 
                         # Create the bar chart
                         # fig, ax = plt.subplots(figsize=(4, 5))
@@ -1379,7 +1380,8 @@ with col1_original:
                         fig = plt.figure(figsize=(4, 5))
                         ax = plt.gca()
                         sorted_df.set_index(label_column).index_value.sort_values(ascending=True).plot(kind="barh", color="#FF4500", ax=ax)
-                        plt.xlabel("Locations")
+                        plt.xlabel(xlabel)
+                        plt.ylabel("Locations")
                         plt.tight_layout()
                         sns.despine()
 
