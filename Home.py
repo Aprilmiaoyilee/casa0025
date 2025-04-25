@@ -489,7 +489,7 @@ with col2_original:
             # st.write(borough_names)
             borough_names.sort()
             # we're going to have a select box to select the borough name
-            borough_name_select = st.selectbox("Select a borough", ["All"]+borough_names+["None"])
+            borough_name_select = st.selectbox("Select a borough", ["All"]+borough_names)
             # set the default to be all
             if borough_name_select != "None":
                 if borough_name_select == "All":
