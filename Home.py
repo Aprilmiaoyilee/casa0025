@@ -1419,6 +1419,9 @@ with col1_original:
                                                 scheme="naturalbreaks", legend_title=viz_layer)
                         st_folium(m, width=725, returned_objects=[])
 
+                        # now drop some of the columns we added and renamed
+                        weighted_df = weighted_df.drop(columns=["index_value_rank"])
+                        
                     # Display the bar chart in the second column to show top 10 index rankings
                     with viz_col2:
 
@@ -1436,7 +1439,7 @@ with col1_original:
 
 
                         # Sort the data for better visualization and take top 10
-                        viz_layer = [x for x in weighted_df.columns if viz_layer.split(" ")[0].lower() in x][0]
+                        # viz_layer = [x for x in weighted_df.columns if viz_layer.split(" ")[0].lower() in x][0]
                         sorted_df = weighted_df.sort_values(viz_layer, ascending=False).head(10)
 
                         # Create the bar chart
