@@ -1276,8 +1276,7 @@ with col1_original:
                     # update the message placeholder
                     message_placeholder.empty()
                     message_placeholder.info("Loading vulnerable population data")
-                    time.sleep(2)
-                    message_placeholder.empty()
+
                     # ------------------------------------------------------------
                     # next we will aggregate the age data to the borough level
                     # do a spatial join between the age data and the lad data 
@@ -1310,8 +1309,7 @@ with col1_original:
                     # update the message placeholder
                     message_placeholder.empty()
                     message_placeholder.info("Loading building density data")
-                    time.sleep(2)
-                    message_placeholder.empty()
+
                     # ------------------------------------------------------------
                     # this is the new code for getting the number of buildings in each borough
                     # ------------------------------------------------------------
@@ -1338,8 +1336,7 @@ with col1_original:
                     # update the message placeholder
                     message_placeholder.empty()
                     message_placeholder.info("Calculating index data")
-                    time.sleep(2)
-                    message_placeholder.empty()
+
                     # now we are going to merge these altogether
                     raw_index_values_gdf_boroughs = gdf_boroughs.merge(london_boroughs_over_65_gdf, on="borough_name", how="left").merge(temperature_gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(buildings_data_df, on="borough_name", how="left")
                     raw_index_values_gdf_boroughs.columns = [x.lower() for x in raw_index_values_gdf_boroughs.columns]
