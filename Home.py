@@ -294,6 +294,8 @@ with col2_original:
 
             # calculate the midpoint of london
             london_midpoint_latitude, london_midpoint_longitude = gdf_boroughs.to_crs(4326).geometry.centroid.y.mean(), gdf_boroughs.to_crs(4326).geometry.centroid.x.mean()
+            st.session_state.london_midpoint_latitude = london_midpoint_latitude
+            st.session_state.london_midpoint_longitude = london_midpoint_longitude
             # st.write(f"London midpoint: {london_midpoint_latitude}, {london_midpoint_longitude}")
 
             if st.session_state.gdf_results is None:
