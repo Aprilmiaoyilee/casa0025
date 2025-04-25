@@ -367,11 +367,11 @@ with col2_original:
                     'min': 0.0,
                     'max': 1.0,
                     'palette': ['blue', 'lightblue', 'white', 'green'],
-                    "cmap": "NDVI",
+                    # "cmap": "NDVI",
 
                 }
                 m.addLayer(ndvi, ndvi_vis, 'NDVI')
-                m.add_colorbar(ndvi_vis, position='bottomright')
+                m.add_colorbar(ndvi_vis, label="NDVI",position='bottomright')
 
                 # (Optional) Outline borough boundaries on top
                 m.addLayer(ee_boroughs.style(**{
