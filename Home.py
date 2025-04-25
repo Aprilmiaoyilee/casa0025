@@ -135,7 +135,16 @@ with col1_original:
         else:
             st.session_state.selected_council = selected_council
 
-    collection = st.selectbox("Select satellite image collection", ["","NAIP", "Landsat","Sentinel-2","NDVI London","Nitrogen","Temperature","Population","Index"])
+    collection = st.selectbox("Select satellite image collection", ["",
+                                                                    # "NAIP",
+                                                                    # "Landsat",
+                                                                    # "Sentinel-2",
+                                                                    "NDVI",
+                                                                    "Nitrogen",
+                                                                    "Temperature",
+                                                                    "Population",
+                                                                    "Index"]
+                                                                    )
     # the user must select a collection
     if collection == "":
         st.error("Please select a collection")
@@ -252,9 +261,9 @@ with col2_original:
         m.add_layer(dataset.median(), visualization, 'RGB')
         m.to_streamlit(height=600)
 
-    elif collection == "NDVI London":
+    elif collection == "NDVI":
 
-        with st.spinner("Loading London Boroughs..."):
+        with st.spinner("Loading data..."):
 
             # this is the old code that we're going to replace with the new code
             # ------------------------------------------------------------
@@ -377,7 +386,7 @@ with col2_original:
                 gdf_results['NDVI'] = gdf_results['NDVI'].astype(float)
                 gdf_results['area'] = gdf_results['geometry'].area
                 # sum the NDVI value for each borough
-                gdf_results_agg = gdf_results[["borough_name","NDVI","area"]].groupby('borough_name').mean().reset_index()
+                gdf_results_agg = gdf_results[["borough_name","NDVI","area"]].groupby('borough_name').median().reset_index()
                 #normalise the NDVI value by dividing it by the area
                 gdf_results_agg['Average NDVI'] = gdf_results_agg['NDVI'] # / gdf_results_agg['area']
                 gdf_results_agg = gdf_results_agg.sort_values("Average NDVI", ascending=True)
