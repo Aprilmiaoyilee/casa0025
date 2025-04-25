@@ -234,6 +234,9 @@ with col1_original:
     # geemap.ee_initialize(project=service_account_info)
     if collection != "":
         st.success("Successfully authenticated with Google Earth Engine")
+        if st.button("Reset App"):
+            st.session_state.clear()  # This clears all session state variables
+            st.rerun()  # This reruns the entire app
 
         with col2_original:
 
