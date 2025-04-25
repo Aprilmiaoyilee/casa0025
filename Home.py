@@ -1342,6 +1342,9 @@ with col1_original:
                     # ------------------------------------------------------------
                     # now lastly we're going to sum these up to get the final index values
                     weighted_df["index_value"] = weighted_df[[x for x in weighted_df.columns if "weighted" in x]].sum(axis=1)
+                    # rescale one more time to ensure the values are between 0 and 1
+                    weighted_df["index_value"] = scaler.fit_transform(weighted_df[["index_value"]])
+
                     weighted_columns = [x for x in weighted_df.columns if "weighted" in x]
 
                     # st.write("Final index dataframe")
