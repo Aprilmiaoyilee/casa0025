@@ -931,7 +931,7 @@ with col1_original:
                         gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
                         # filter the LAD11NM column to match the users  
                         gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
-                        gdf_boroughs = gdf_boroughs[["LSOA11CD"]].rename(columns={"LSOA11CD":"geography code"})
+                        gdf_boroughs = gdf_boroughs[["MSOA21CD"]].rename(columns={"MSOA21CD":"geography code"})
 
                         st.write(gdf_boroughs)
                         st.write(london_boroughs_over_65)
