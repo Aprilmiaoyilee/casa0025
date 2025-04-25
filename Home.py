@@ -1368,11 +1368,18 @@ with col1_original:
                         sorted_df = weighted_df.sort_values("index_value", ascending=False).head(10)
 
                         # Create the bar chart
-                        fig, ax = plt.subplots(figsize=(4, 5))
-                        ax.barh(sorted_df[label_column][::-1], sorted_df["index_value"][::-1], color="#FF4500", height=0.6)
-                        ax.set_xlabel(xlabel)
-                        ax.tick_params(axis='y', labelsize=8)
+                        # fig, ax = plt.subplots(figsize=(4, 5))
+                        # ax.barh(sorted_df[label_column][::-1], sorted_df["index_value"][::-1], color="#FF4500", height=0.6)
+                        # ax.set_xlabel(xlabel)
+                        # ax.tick_params(axis='y', labelsize=8)
+                        # plt.tight_layout()
+
+
+                        # TM version of the bar chart as using ax is getting some odd results
+                        sorted_df.index_value.plot(kind="barh", color="#FF4500", figsize=(4, 5))
+                        plt.xlabel(xlabel)
                         plt.tight_layout()
+
 
                         # Display the chart
                         st.pyplot(fig)
@@ -1404,6 +1411,7 @@ with col1_original:
                         mime="text/csv",
                         key="download_csv_button"
                     )
+
 
 
 
