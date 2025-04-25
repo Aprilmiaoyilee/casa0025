@@ -1344,6 +1344,8 @@ with col1_original:
                     # Create visualization components
                     viz_col1, viz_col2 = st.columns([7, 3])
                 
+                    viz_layer = [x for x in (["index_value"] + weighted_df.columns) if viz_layer.split(" ")[0].lower() in x][0]
+
                     # Display the map in the first column
                     with viz_col1:
                         # Create the map here instead
@@ -1353,7 +1355,6 @@ with col1_original:
 
                     # Display the bar chart in the second column to show top 10 index rankings
                     with viz_col2:
-                        viz_layer = [x for x in (["index_value"] + weighted_df.columns) if viz_layer.split(" ")[0].lower() in x][0]
 
                         # Aggregation level
                         if st.session_state.aggregation_level == "LAD":
