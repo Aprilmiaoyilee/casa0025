@@ -1359,7 +1359,7 @@ with col1_original:
                             xlabel = "Index Value"
                         else:  # Council level
                             st.write(f"Top 10 Priority Areas in {selected_council} ")
-                            label_column = "borough_name"  # actually LSOA11CD
+                            label_column = "LSOA"  # actually LSOA11CD
                             xlabel = "Index Value"
 
                         import matplotlib.pyplot as plt
@@ -1376,7 +1376,9 @@ with col1_original:
 
 
                         # TM version of the bar chart as using ax is getting some odd results
-                        sorted_df.index_value.plot(kind="barh", color="#FF4500", figsize=(4, 5))
+                        fig = plt.figure(figsize=(4, 5))
+                        ax = plt.gca()
+                        sorted_df.index_value.plot(kind="barh", color="#FF4500", ax=ax)
                         plt.xlabel(xlabel)
                         plt.tight_layout()
 
@@ -1412,7 +1414,8 @@ with col1_original:
                         key="download_csv_button"
                     )
 
-
+                    # clear up memory by deleting the dataframe variables except the last one 
+                    del raw_index_values_gdf_boroughs, weighted_df, gdf_results, temperature_gdf_results, london_boroughs_over_65_gdf, gdf_boroughs, london_boroughs_over_65, buildings_data_df, buildings_data_gdf
 
 
 
