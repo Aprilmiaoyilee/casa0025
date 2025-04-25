@@ -141,15 +141,14 @@ with col1_original:
         user_selected_end_date = st.date_input("Select end date", value=None)
         st.write(f"User selected start date: {user_selected_start_date}, {type(user_selected_start_date)}")
         st.write(f"User selected end date: {user_selected_end_date}, {type(user_selected_end_date)}")
-        st.session_state.user_selected_start_date = user_selected_start_date
-        st.session_state.user_selected_end_date = user_selected_end_date
+
     else:
         user_selected_start_date = None
         user_selected_end_date = None
 
     if date_range_selection == "Yes" and user_selected_start_date is not None and user_selected_end_date is not None:
-        st.session_state.user_selected_start_date = user_selected_start_date
-        st.session_state.user_selected_end_date = user_selected_end_date
+        st.session_state.user_selected_start_date = user_selected_start_date.strftime("%Y-%m-%d")
+        st.session_state.user_selected_end_date = user_selected_end_date.strftime("%Y-%m-%d")
 
     if date_range_selection == "":
         st.stop()
