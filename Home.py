@@ -160,7 +160,7 @@ with col1_original:
         if 'previous_selected_council' not in st.session_state:
             st.session_state.previous_selected_council = selected_council
         elif st.session_state.previous_selected_council != selected_council:
-            clear_cache()
+            # clear_cache()
             st.session_state.previous_selected_council = selected_council
     
 
