@@ -337,7 +337,7 @@ with col2_original:
                 # 4️ Sum NDVI per borough
                 fc_results = ndvi.reduceRegions(
                     collection=ee_boroughs,
-                    reducer=ee.Reducer.median(),
+                    reducer=ee.Reducer.mean(),
                     scale=10,
                     crs='EPSG:27700'
                 )
@@ -345,7 +345,7 @@ with col2_original:
                 # 5️⃣Pull results client‑side as GeoJSON → GeoDataFrame
                 geojson = fc_results.getInfo()
                 
-                gdf_results = gp.GeoDataFrame.from_features(geojson['features']).rename(columns={'NAME': 'MSOA Name',"median": "NDVI"})
+                gdf_results = gp.GeoDataFrame.from_features(geojson['features']).rename(columns={'NAME': 'MSOA Name',"mean": "NDVI"})
                 st.session_state.gdf_results = gdf_results
             else:
                 gdf_results = st.session_state.gdf_results
@@ -386,7 +386,7 @@ with col2_original:
                 gdf_results['NDVI'] = gdf_results['NDVI'].astype(float)
                 gdf_results['area'] = gdf_results['geometry'].area
                 # sum the NDVI value for each borough
-                gdf_results_agg = gdf_results[["borough_name","NDVI","area"]].groupby('borough_name').median().reset_index()
+                gdf_results_agg = gdf_results[["borough_name","NDVI","area"]].groupby('borough_name').mean().reset_index()
                 #normalise the NDVI value by dividing it by the area
                 gdf_results_agg['Average NDVI'] = gdf_results_agg['NDVI'] # / gdf_results_agg['area']
                 gdf_results_agg = gdf_results_agg.sort_values("Average NDVI", ascending=True)
