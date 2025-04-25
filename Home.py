@@ -971,7 +971,9 @@ with col1_original:
                         m = st.session_state.buildings_data_map
                     
                     
-
+                    st.success("Successfully loaded building density data")
+                    # st_folium(m, width=725)
+                    st_folium(m, width=725, returned_objects=[])
 
 
             elif collection == "Index":
