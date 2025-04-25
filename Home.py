@@ -951,7 +951,7 @@ with col1_original:
                 with st.spinner("Loading the building density data..."):
                     # we're going to load the building density data from a parquet file
                     if st.session_state.buildings_data_gdf is None:
-                        buildings_data_gdf = gp.read_file('data/lsoa_bmd_from paul.geojson')
+                        buildings_data_gdf = gp.read_file('data/lsoa_bmd_from paul.geojson').to_crs(4326)
 
 
 
