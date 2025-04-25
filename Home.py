@@ -1330,7 +1330,7 @@ with col1_original:
 
                     # ------------------------------------------------------------
 
-                    viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value"] + [x.split("_")[0] for x in weighted_columns])
+                    viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value"] + [x.split("_normalised")[0].replace("_"," ") for x in weighted_columns])
                     if "NDVI" in viz_layer:
                         weighted_df[viz_layer] = 1 / (weighted_df[viz_layer] + 0.01)
                     # now we're going to add this to the map # comment this as this has been moved under the viz_col1 below
@@ -1367,7 +1367,7 @@ with col1_original:
 
 
                         # Sort the data for better visualization and take top 10
-                        viz_layer = [x for x in weighted_df.columns if viz_layer in x][0]
+                        viz_layer = [x for x in weighted_df.columns if viz_layer.split(" ")[0].lower() in x][0]
                         sorted_df = weighted_df.sort_values(viz_layer, ascending=False).head(10)
 
                         # Create the bar chart
