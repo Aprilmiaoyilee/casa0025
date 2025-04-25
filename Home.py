@@ -137,11 +137,15 @@ with col1_original:
 
     date_range_selection = st.selectbox("Would you like to select a custom date range?", ["Yes","No"])
     if date_range_selection == "Yes":
-        user_selected_start_date = st.date_input("Select start date", [""]+list(range(datetime.now().year-3, datetime.now().year+1)))
-        user_selected_end_date = st.date_input("Select end date", [""]+list(range(datetime.now().year-3, datetime.now().year+1)))
+        user_selected_start_date = st.date_input("Select start date", datetime.now().year-3, datetime.now().year+1)
+        user_selected_end_date = st.date_input("Select end date", datetime.now().year-3, datetime.now().year+1)
     else:
         user_selected_start_date = None
         user_selected_end_date = None
+
+    if date_range_selection == "Yes" and user_selected_start_date is not None and user_selected_end_date is not None:
+        st.session_state.user_selected_start_date = user_selected_start_date
+        st.session_state.user_selected_end_date = user_selected_end_date
 
     collection = st.selectbox("Select satellite image collection", ["",
                                                                     # "NAIP",
@@ -159,6 +163,7 @@ with col1_original:
         st.stop()
     else:
         st.session_state.collection = collection
+
 
 
 
