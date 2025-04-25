@@ -992,7 +992,7 @@ with col1_original:
                     
                     if st.session_state.buildings_data_map is None:
                         # we'll plot this on a folium map
-                        m = buildings_data_gdf.explore("bldg_dens", tiles="CartoDB.Positron", cmap="Blues", scheme="naturalbreaks", legend_title="Building Density", style_kwds={'weight': 1})
+                        m = buildings_data_gdf.explore("Building Density", tiles="CartoDB.Positron", cmap="Blues", scheme="naturalbreaks", legend_title="Building Density", style_kwds={'weight': 1})
                     
                         # we're going to cache this map as well 
                         st.session_state.buildings_data_map = m
