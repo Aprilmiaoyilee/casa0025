@@ -1330,7 +1330,7 @@ with col1_original:
 
                     # ------------------------------------------------------------
 
-                    viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value"] + [x.split("_normalised")[0].replace("_"," ").upper() for x in weighted_columns])
+                    viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value".replace("_"," ").title()] + [x.split("_normalised")[0].replace("_"," ").title() for x in weighted_columns])
                     if "NDVI" in viz_layer:
                         weighted_df[viz_layer] = 1 / (weighted_df[viz_layer] + 0.01)
                     # now we're going to add this to the map # comment this as this has been moved under the viz_col1 below
