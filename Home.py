@@ -366,7 +366,9 @@ with col2_original:
                 ndvi_vis = {
                     'min': 0.0,
                     'max': 1.0,
-                    'palette': ['blue', 'lightblue', 'white', 'green']
+                    'palette': ['blue', 'lightblue', 'white', 'green'],
+                    "cmap": "NDVI",
+
                 }
                 m.addLayer(ndvi, ndvi_vis, 'NDVI')
 
