@@ -147,22 +147,23 @@ with col1_original:
         st.session_state.user_selected_start_date = user_selected_start_date
         st.session_state.user_selected_end_date = user_selected_end_date
 
-    collection = st.selectbox("Select satellite image collection", ["",
-                                                                    # "NAIP",
-                                                                    # "Landsat",
-                                                                    # "Sentinel-2",
-                                                                    "NDVI",
-                                                                    "Nitrogen",
-                                                                    "Temperature",
-                                                                    "Population",
-                                                                    "Index"]
-                                                                    )
-    # the user must select a collection
-    if collection == "":
-        st.error("Please select a collection")
-        st.stop()
-    else:
-        st.session_state.collection = collection
+    if date_range_selection != "":
+        collection = st.selectbox("Select satellite image collection", ["",
+                                                                        # "NAIP",
+                                                                        # "Landsat",
+                                                                        # "Sentinel-2",
+                                                                        "NDVI",
+                                                                        "Nitrogen",
+                                                                        "Temperature",
+                                                                        "Population",
+                                                                        "Index"]
+                                                                        )
+        # the user must select a collection
+        if collection == "":
+            st.error("Please select a collection")
+            st.stop()
+        else:
+            st.session_state.collection = collection
 
 
 
