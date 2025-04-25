@@ -1063,7 +1063,8 @@ with col1_original:
                             # convert this to a geodataframe
                             gdf_boroughs = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
                             gdf_boroughs = gdf_boroughs[["LSOA21CD","geometry"]].rename(columns={"LSOA21CD":"borough_name"})
-                            gdf_boroughs = gdf_boroughs.drop_duplicates("borough_name")
+                            gdf_boroughs = gdf_boroughs.drop_duplicates(subset=["borough_name"])
+                            st.write(gdf_boroughs)
                             st.session_state.gdf_boroughs = gdf_boroughs
 
 
@@ -1125,7 +1126,6 @@ with col1_original:
 
                         # 2️ Convert GeoDataFrame → EE FeatureCollection
                         ee_boroughs = geemap.geopandas_to_ee(gdf_boroughs, geodesic=False)
-                        st.write(ee_boroughs)
                         st.session_state.ee_boroughs = ee_boroughs
                         # 3️ Build Sentinel‑2 NDVI composite
                         sentinel = (
