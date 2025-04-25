@@ -953,9 +953,18 @@ with col1_original:
                     # calculate the midpoint of london
                     london_midpoint_latitude, london_midpoint_longitude = london_boroughs_over_65.to_crs(4326).geometry.centroid.y.mean(), london_boroughs_over_65.to_crs(4326).geometry.centroid.x.mean()
                     
+
+                    # rename columns for the map
+                    london_boroughs_over_65 = london_boroughs_over_65.rename(columns={"pct_over_65_pop":"% Population over 65",
+                                                                                      "total_pop_over_65_years_old":"Total Population over 65",
+                                                                                      "total_pop":"Total Population"})
+                    london_boroughs_over_65 = london_boroughs_over_65.drop(columns=["date","city"])
+                    # round the % population over 65 to 2 decimal places
+                    london_boroughs_over_65["% Population over 65"] = london_boroughs_over_65["% Population over 65"].round(2)
+
                     if st.session_state.london_boroughs_over_65_map is None:
                         # we'll plot this on a folium map
-                        m = london_boroughs_over_65.explore("pct_over_65_pop", tiles="CartoDB.Positron", cmap="Blues", scheme="Quantiles", legend_title="Population over 65", style_kwds={'weight': 1})
+                        m = london_boroughs_over_65.explore("% Population over 65", tiles="CartoDB.Positron", cmap="Blues", scheme="Quantiles", legend_title="Population over 65", style_kwds={'weight': 1})
                     
                         # we're going to cache this map as well 
                         st.session_state.london_boroughs_over_65_map = m
