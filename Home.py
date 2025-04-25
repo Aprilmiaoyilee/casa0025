@@ -199,10 +199,11 @@ with col1_original:
                                                                         # "NAIP",
                                                                         # "Landsat",
                                                                         # "Sentinel-2",
+                                                                        # "Nitrogen",
                                                                         "NDVI",
-                                                                        "Nitrogen",
                                                                         "Temperature",
                                                                         "Population",
+                                                                        "Building Density"
                                                                         "Index"]
                                                                         )
         # the user must select a collection
@@ -943,6 +944,33 @@ with col1_original:
                     # st_folium(m, width=725)
                     st_folium(m, width=725, returned_objects=[])
                     # m.to_streamlit(height=600)
+
+            # we're going to add a new collection called "Building Density"
+            elif collection == "Building Density":
+                with st.spinner("Loading the building density data..."):
+                    # we're going to load the building density data from a parquet file
+                    if st.session_state.buildings_data_gdf is None:
+                        buildings_data_gdf = gp.read_file('data/lsoa_bmd_from paul.geojson')
+
+
+
+                        st.session_state.buildings_data_gdf = buildings_data_gdf
+                    else:
+                        buildings_data_gdf = st.session_state.buildings_data_gdf  
+                        
+                    # now we're going to add this to the map
+                    
+                    if st.session_state.buildings_data_map is None:
+                        # we'll plot this on a folium map
+                        m = buildings_data_gdf.explore("bldg_dens", tiles="CartoDB.Positron", cmap="Blues", scheme="naturalbreaks", legend_title="Building Density", style_kwds={'weight': 1})
+                    
+                        # we're going to cache this map as well 
+                        st.session_state.buildings_data_map = m
+                    else:
+                        m = st.session_state.buildings_data_map
+                    
+                    
+
 
 
             elif collection == "Index":
