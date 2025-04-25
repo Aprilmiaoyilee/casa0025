@@ -1330,7 +1330,7 @@ with col1_original:
 
                     # ------------------------------------------------------------
 
-                    viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value"] + [x.split("_normalised")[0].replace("_"," ") for x in weighted_columns])
+                    viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value"] + [x.split("_normalised")[0].replace("_"," ").upper() for x in weighted_columns])
                     if "NDVI" in viz_layer:
                         weighted_df[viz_layer] = 1 / (weighted_df[viz_layer] + 0.01)
                     # now we're going to add this to the map # comment this as this has been moved under the viz_col1 below
@@ -1353,6 +1353,8 @@ with col1_original:
 
                     # Display the bar chart in the second column to show top 10 index rankings
                     with viz_col2:
+                        viz_layer = [x for x in (["index_value"] + weighted_df.columns) if viz_layer.split(" ")[0].lower() in x][0]
+
                         # Aggregation level
                         if st.session_state.aggregation_level == "LAD":
                             st.write("Top 10 Priority Boroughs")
