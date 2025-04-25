@@ -1055,6 +1055,9 @@ with col1_original:
             elif collection == "Index":
                 with st.spinner("Loading the index data..."):
 
+                    today = datetime.now().strftime("%Y-%m-%d")
+                    one_year_ago = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
+
                     if st.session_state.lad_data is None:
 
                         # check to see what level of aggregation the user has selected
@@ -1146,7 +1149,7 @@ with col1_original:
                         sentinel = (
                             ee.ImageCollection('COPERNICUS/S2_SR')
                             .filterBounds(ee_boroughs)
-                            .filterDate('2020-06-01', '2020-09-30')
+                            .filterDate(one_year_ago, today)
                             .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 10))
                             .median()
                             .clip(ee_boroughs)
@@ -1226,7 +1229,7 @@ with col1_original:
                     # load the data and apply the relevant filters and functions
                     #.filter(ee.Filter.calendarRange(6, 9,'month')) \  may apply a similar seasonal filter here
                     landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2') \
-                    .filterDate('2022-01-01', '2024-12-31') \
+                    .filterDate(one_year_ago, today) \
                     .filter(ee.Filter.calendarRange(6, 9, 'month'))\
                     .filterBounds(ee_boroughs) \
                     .filter(ee.Filter.lt("CLOUD_COVER", 15)) \
