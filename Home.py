@@ -933,7 +933,7 @@ with col1_original:
                         gdf_boroughs = gdf_boroughs[["MSOA21CD"]].rename(columns={"MSOA21CD":"geography code"})
 
 
-                        # do a spatial join to get the building density data for the selected council
+                        # do a spatial join to get the vulnerable population data for the selected council
                         london_boroughs_over_65 = london_boroughs_over_65.merge(gdf_boroughs, on="geography code")
 
                         # convert the wkt geometry to a shapely geometry
@@ -1057,10 +1057,11 @@ with col1_original:
                             gdf_lsoas = pd.read_parquet('data/london_msoas_2021_mapping_file.parquet.gzip')
                             # convert the wkt geometry to a shapely geometry
                             gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
-                            # convert this to a geodataframe
-                            gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
+
                             # filter the LAD11NM column to match the users  
-                            gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
+                            gdf_lsoas = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
+                            # convert this to a geodataframe
+                            gdf_boroughs = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
                             gdf_boroughs = gdf_boroughs[["LSOA21CD","geometry"]].rename(columns={"LSOA21CD":"borough_name"})
                             st.session_state.gdf_boroughs = gdf_boroughs
 
