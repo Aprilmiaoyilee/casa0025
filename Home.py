@@ -745,23 +745,22 @@ with col1_original:
                     # load the data and apply the relevant filters and functions
                     #.filter(ee.Filter.calendarRange(6, 9,'month')) \  may apply a similar seasonal filter here
                     if st.session_state.user_selected_start_date is not None and st.session_state.user_selected_end_date is not None:
-                        landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2') \
-                        # .filterDate('2021-01-01', '2024-12-31') \
-                        .filterDate(st.session_state.user_selected_start_date, st.session_state.user_selected_end_date) \ # this is the new user selected version
-                        .filterBounds(ee_boroughs) \
-                        .filter(ee.Filter.lt("CLOUD_COVER", 15)) \
-                        .map(applyScaleFactors) \
-                        .select('ST_B10').map(celsius) \
-                        .reduce(ee.Reducer.median()) \
+                        landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
+                        .filterDate(st.session_state.user_selected_start_date, st.session_state.user_selected_end_date) # this is the new user selected version
+                        .filterBounds(ee_boroughs)
+                        .filter(ee.Filter.lt("CLOUD_COVER", 15))
+                        .map(applyScaleFactors)
+                        .select('ST_B10').map(celsius)
+                        .reduce(ee.Reducer.median())
                         .clip(ee_boroughs)
                     else:
-                        landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2') \
-                        .filterDate(one_year_ago, today) \
-                        .filterBounds(ee_boroughs) \
-                        .filter(ee.Filter.lt("CLOUD_COVER", 15)) \
-                        .map(applyScaleFactors) \
-                        .select('ST_B10').map(celsius) \
-                        .reduce(ee.Reducer.median()) \
+                        landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
+                        .filterDate(one_year_ago, today)
+                        .filterBounds(ee_boroughs)
+                        .filter(ee.Filter.lt("CLOUD_COVER", 15))
+                        .map(applyScaleFactors)
+                        .select('ST_B10').map(celsius)
+                        .reduce(ee.Reducer.median())
                         .clip(ee_boroughs)
                     # mask out water in London to detect more accurate LST result
                     # Generate a water mask.
