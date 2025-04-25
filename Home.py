@@ -1002,6 +1002,9 @@ with col1_original:
                     # st_folium(m, width=725)
                     st_folium(m, width=725, returned_objects=[])
 
+                    # clear cache
+                    clear_cache()
+
 
             elif collection == "Index":
                 with st.spinner("Loading the index data..."):
