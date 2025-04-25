@@ -1359,7 +1359,7 @@ with col1_original:
                             xlabel = "Index Value"
                         else:  # Council level
                             st.write(f"Top 10 Priority Areas in {selected_council} ")
-                            label_column = "LSOA"  # actually LSOA11CD
+                            label_column = "borough_name"  # actually LSOA11CD
                             xlabel = "Index Value"
 
                         import matplotlib.pyplot as plt
@@ -1378,7 +1378,7 @@ with col1_original:
                         # TM version of the bar chart as using ax is getting some odd results
                         fig = plt.figure(figsize=(4, 5))
                         ax = plt.gca()
-                        sorted_df.index_value.plot(kind="barh", color="#FF4500", ax=ax)
+                        sorted_df.set_index(label_column).index_value.plot(kind="barh", color="#FF4500", ax=ax)
                         plt.xlabel(xlabel)
                         plt.tight_layout()
 
