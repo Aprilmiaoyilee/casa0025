@@ -384,14 +384,14 @@ with col2_original:
                 elif st.session_state.aggregation_level == "Council":
                     st.write("Average NDVI per LSOA - Top 10")
 
-                fig = plt.figure(figsize=(6, 14))
+                fig = plt.figure(figsize=(6, 10))
                 ax = plt.gca()
 
                 # then set background to be clear
                 fig.patch.set_alpha(0)
                 ax.patch.set_alpha(0)
 
-                gdf_results_agg.set_index(['borough_name'])['Average NDVI'].head(10).plot(kind='barh', ax=ax)
+                gdf_results_agg.set_index(['borough_name'])['Average NDVI'].tail(10).plot(kind='barh', ax=ax)
                 plt.xlabel('Location')
                 plt.ylabel('Average NDVI')
                 # plt.title('Average NDVI per Borough')
