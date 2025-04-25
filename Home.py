@@ -960,7 +960,7 @@ with col1_original:
                                                                                       "total_pop":"Total Population"})
                     london_boroughs_over_65 = london_boroughs_over_65.drop(columns=["date","city"])
                     # round the % population over 65 to 2 decimal places
-                    london_boroughs_over_65["% Population over 65"] = london_boroughs_over_65["% Population over 65"].round(2)
+                    london_boroughs_over_65["% Population over 65"] = (london_boroughs_over_65["% Population over 65"] * 100).round(2)
 
                     if st.session_state.london_boroughs_over_65_map is None:
                         # we'll plot this on a folium map
