@@ -1343,10 +1343,8 @@ with col1_original:
 
                     # Create visualization components
                     viz_col1, viz_col2 = st.columns([7, 3])
-                    if "ndvi" not in viz_layer.lower():
-                        viz_layer = [x for x in (["index_value"] + [x for x in weighted_df.columns]) if viz_layer.split(" ")[0].lower() in x][0]
-                    else:
-                        viz_layer = "ndvi"
+                    viz_layer = [x for x in (["index_value"] + [x for x in weighted_df.columns]) if viz_layer.split(" ")[0].lower() in x][0]
+
                     st.write(viz_layer)
 
                     # Display the map in the first column
