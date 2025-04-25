@@ -75,7 +75,7 @@ def clear_cache():
 st.set_page_config(
     layout="wide"
 )
-st.title("Google Earth Engine - Demo application")
+st.title("Heat Stress Vulnerability Index")
 
 with st.expander("Read more"):
     st.markdown("""
