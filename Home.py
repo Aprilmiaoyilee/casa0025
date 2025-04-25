@@ -969,6 +969,9 @@ with col1_original:
                     gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
                     gdf_boroughs = gdf_boroughs[["LSOA11CD","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
 
+                    st.write(gdf_boroughs)
+                    st.write(buildings_data_gdf)
+
                     # do a spatial join to get the building density data for the selected council
                     buildings_data_gdf = gp.sjoin(buildings_data_gdf, gdf_boroughs, how="left", predicate="intersects")
                         
