@@ -367,11 +367,10 @@ with col2_original:
                     'min': 0.0,
                     'max': 1.0,
                     'palette': ['blue', 'lightblue', 'white', 'green'],
-                    # "cmap": "NDVI",
 
                 }
                 m.addLayer(ndvi, ndvi_vis, 'NDVI')
-                m.add_colorbar(ndvi_vis, label="NDVI",position='bottomright')
+                m.add_colorbar(ndvi_vis, label="NDVI")
 
                 # (Optional) Outline borough boundaries on top
                 m.addLayer(ee_boroughs.style(**{
@@ -627,6 +626,7 @@ with col2_original:
             m.add_basemap("CartoDB.Positron")
             m.set_center(london_midpoint_longitude, london_midpoint_latitude, 10)
             m.add_layer(nox_layer, visualization, 'Nitrogen oxide')
+
             m.add_colorbar(
                     visualization,
                     label="Nitrogen Oxide",
@@ -820,6 +820,7 @@ with col2_original:
                 m.set_center(london_midpoint_longitude, london_midpoint_latitude, 12)
 
             m.add_layer(temperature_layer, visualization, 'Surface temperature')
+            m.add_colorbar(visualization, label="Surface temperature")
 
             # we're going to add the london boroughs over 65 to the map
             # m.add_data(
