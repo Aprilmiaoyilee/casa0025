@@ -1245,7 +1245,7 @@ with col1_original:
                     # do a spatial join between the age data and the lad data 
 
                     london_boroughs_over_65 = london_lsoa_over_65_gdf.to_crs(4326).sjoin(gdf_boroughs.to_crs(4326), how="left")
-                    london_boroughs_over_65_gdf = london_boroughs_over_65[["borough_name","total_pop_over_65_years_old"]].groupby("borough_name").sum().reset_index()
+                    london_boroughs_over_65_gdf = london_boroughs_over_65[["borough_name","pct_over_65_pop"]].groupby("borough_name").mean().reset_index()
 
                     # now we'll add this to the session state
                     st.session_state.london_boroughs_over_65 = london_boroughs_over_65_gdf
@@ -1300,7 +1300,7 @@ with col1_original:
                     # okay so now we're going to normalise the data values  using sklearn min max scaler
                     scaler = MinMaxScaler()
                     # first we'll get the columns we want to normalise
-                    columns_to_normalise = ["NDVI","surface_temperature","total_pop_over_65_years_old","building_density"]
+                    columns_to_normalise = ["NDVI","surface_temperature","pct_over_65_pop","building_density"]
 
                     for column in columns_to_normalise:
                         raw_index_values_gdf_boroughs[f"{column}_normalised"] = scaler.fit_transform(raw_index_values_gdf_boroughs[[column]])
