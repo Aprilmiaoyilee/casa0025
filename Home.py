@@ -77,6 +77,8 @@ st.set_page_config(
 )
 st.title("Heat Stress Vulnerability Index")
 
+st.markdown("## About")
+
 with st.expander("Read more"):
     st.markdown("""
     This application features **interactive maps** that allow users to toggle individual layers or view heat risk across **London Boroughs**, using an index that combines several datasets:
