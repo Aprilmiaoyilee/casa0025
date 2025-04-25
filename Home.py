@@ -123,6 +123,12 @@ if "buildings_data_gdf" not in st.session_state:
     st.session_state.buildings_data_gdf = None
 if "buildings_data_df" not in st.session_state:
     st.session_state.buildings_data_df = None
+if "previous_aggregation_level" not in st.session_state:
+    st.session_state.previous_aggregation_level = None
+if "previous_selected_council" not in st.session_state:
+    st.session_state.previous_selected_council = None
+if "date_range_selection" not in st.session_state:
+    st.session_state.date_range_selection = None
 
 
 
@@ -166,6 +172,7 @@ with col1_original:
             st.session_state.selected_council = selected_council
 
     date_range_selection = st.selectbox("Would you like to select a custom date range?", ["","Yes","No"])
+    st.session_state.date_range_selection = date_range_selection
     if date_range_selection == "Yes":
         user_selected_start_date = st.date_input("Select start date", value=None)
         user_selected_end_date = st.date_input("Select end date", value=None)
@@ -757,7 +764,7 @@ with col1_original:
                     
                     # load the data and apply the relevant filters and functions
                     #.filter(ee.Filter.calendarRange(6, 9,'month')) \  may apply a similar seasonal filter here
-                    if st.session_state.user_selected_start_date is not None and st.session_state.user_selected_end_date is not None:
+                    if st.session_state.date_range_selection == "Yes":
                         landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2') \
                         .filterDate(st.session_state.user_selected_start_date, st.session_state.user_selected_end_date) \
                         .filterBounds(ee_boroughs) \
@@ -766,7 +773,7 @@ with col1_original:
                         .select('ST_B10').map(celsius) \
                         .reduce(ee.Reducer.median()) \
                         .clip(ee_boroughs)
-                    else:
+                    elif st.session_state.date_range_selection == "No":
                         landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2') \
                         .filterDate(one_year_ago, today) \
                         .filterBounds(ee_boroughs) \
