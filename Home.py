@@ -371,6 +371,7 @@ with col2_original:
 
                 }
                 m.addLayer(ndvi, ndvi_vis, 'NDVI')
+                m.add_colorbar(ndvi_vis, position='bottomright')
 
                 # (Optional) Outline borough boundaries on top
                 m.addLayer(ee_boroughs.style(**{
