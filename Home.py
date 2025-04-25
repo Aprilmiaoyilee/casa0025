@@ -1293,11 +1293,11 @@ with col1_original:
                     with viz_col2:
                         # Aggregation level
                         if st.session_state.aggregation_level == "LAD":
-                            st.write("Top 10 Boroughs by Index Value")
+                            st.write("Top 10 Priority Boroughs")
                             label_column = "borough_name"
                             xlabel = "Index Value"
                         else:  # Council level
-                            st.write(f"Top 10 LSOAs in {selected_council} by Index Value")
+                            st.write(f"Top 10 Priority Areas in {selected_council} ")
                             label_column = "borough_name"  # actually LSOA11CD
                             xlabel = "Index Value"
 
@@ -1308,7 +1308,7 @@ with col1_original:
 
                         # Create the bar chart
                         fig, ax = plt.subplots(figsize=(4, 5))
-                        ax.barh(sorted_df[label_column], sorted_df["index_value"], color="#FF4500", height=0.6)
+                        ax.barh(sorted_df[label_column][::-1], sorted_df["index_value"][::-1], color="#FF4500", height=0.6)
                         ax.set_xlabel(xlabel)
                         ax.tick_params(axis='y', labelsize=8)
                         plt.tight_layout()
@@ -1319,9 +1319,9 @@ with col1_original:
                         # Add descriptive text below the chart
                         st.markdown("""
                         ### About the Index
-                        This heat vulnerability index combines 4 key factors:
+                        This Heat Stress Vulnerability Index combines 4 key factors:
                         - NDVI (vegetation coverage)
-                        - Surface temperature (heat exposure)
+                        - Land Surface temperature (heat exposure)
                         - Elderly population (vulnerable demographic)
                         - Building density (urban heat island effect)
                         
