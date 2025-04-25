@@ -139,6 +139,8 @@ with col1_original:
     if date_range_selection == "Yes":
         user_selected_start_date = st.date_input("Select start date", value=None)
         user_selected_end_date = st.date_input("Select end date", value=None)
+        st.write(f"User selected start date: {user_selected_start_date}, {type(user_selected_start_date)}")
+        st.write(f"User selected end date: {user_selected_end_date}, {type(user_selected_end_date)}")
     else:
         user_selected_start_date = None
         user_selected_end_date = None
