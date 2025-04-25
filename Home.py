@@ -924,7 +924,6 @@ with col1_original:
                         # load the lsoa level geometries
                         # gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
                         gdf_lsoas = pd.read_parquet('data/london_msoas_2021_mapping_file.parquet.gzip')
-                        st.write(gdf_lsoas)
                         # convert the wkt geometry to a shapely geometry
                         gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
                         # convert this to a geodataframe
@@ -932,9 +931,6 @@ with col1_original:
                         # filter the LAD11NM column to match the users  
                         gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
                         gdf_boroughs = gdf_boroughs[["MSOA21CD"]].rename(columns={"MSOA21CD":"geography code"})
-
-                        st.write(gdf_boroughs)
-                        st.write(london_boroughs_over_65)
 
 
                         # do a spatial join to get the building density data for the selected council
@@ -959,7 +955,7 @@ with col1_original:
                     
                     if st.session_state.london_boroughs_over_65_map is None:
                         # we'll plot this on a folium map
-                        m = london_boroughs_over_65.explore("total_pop_over_65_years_old", tiles="CartoDB.Positron", cmap="Blues", scheme="Quantiles", legend_title="Population over 65", style_kwds={'weight': 1})
+                        m = london_boroughs_over_65.explore("pct_over_65_pop", tiles="CartoDB.Positron", cmap="Blues", scheme="Quantiles", legend_title="Population over 65", style_kwds={'weight': 1})
                     
                         # we're going to cache this map as well 
                         st.session_state.london_boroughs_over_65_map = m
