@@ -1293,8 +1293,8 @@ with col1_original:
                     # now we are going to merge these altogether
                     raw_index_values_gdf_boroughs = gdf_boroughs.merge(london_boroughs_over_65_gdf, on="borough_name", how="left").merge(temperature_gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(buildings_data_df, on="borough_name", how="left")
 
-                    # st.write("Merged dataframe")
-                    # st.dataframe(raw_index_values_gdf_boroughs)
+                    st.write("Merged dataframe")
+                    st.dataframe(raw_index_values_gdf_boroughs)
 
 
                     # okay so now we're going to normalise the data values  using sklearn min max scaler
