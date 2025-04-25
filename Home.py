@@ -148,7 +148,7 @@ with col1_original:
         st.session_state.previous_aggregation_level = aggregation_level
     # elif st.session_state.previous_aggregation_level != aggregation_level:
     #     clear_cache()
-    st.session_state.previous_aggregation_level = aggregation_level
+        # st.session_state.previous_aggregation_level = aggregation_level
 
     # the user must select a aggregation level
     if aggregation_level == "":
@@ -773,6 +773,7 @@ with col1_original:
                     if st.session_state.date_range_selection == "Yes":
                         landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2') \
                         .filterDate(st.session_state.user_selected_start_date, st.session_state.user_selected_end_date) \
+                        .filter(ee.Filter.calendarRange(6, 9, 'month'))\
                         .filterBounds(ee_boroughs) \
                         .filter(ee.Filter.lt("CLOUD_COVER", 15)) \
                         .map(applyScaleFactors) \
@@ -782,6 +783,7 @@ with col1_original:
                     elif st.session_state.date_range_selection == "No":
                         landsat = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2') \
                         .filterDate(one_year_ago, today) \
+                        .filter(ee.Filter.calendarRange(6, 9, 'month'))\
                         .filterBounds(ee_boroughs) \
                         .filter(ee.Filter.lt("CLOUD_COVER", 15)) \
                         .map(applyScaleFactors) \
