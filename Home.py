@@ -135,8 +135,8 @@ with col1_original:
     aggregation_level = st.selectbox("Select aggregation level", ["","LAD","Council"])
     if 'previous_aggregation_level' not in st.session_state:
         st.session_state.previous_aggregation_level = aggregation_level
-    elif st.session_state.previous_aggregation_level != aggregation_level:
-        clear_cache()
+    # elif st.session_state.previous_aggregation_level != aggregation_level:
+    #     clear_cache()
     st.session_state.previous_aggregation_level = aggregation_level
 
     # the user must select a aggregation level
@@ -153,8 +153,8 @@ with col1_original:
         # Add this after the council selectbox
         if 'previous_selected_council' not in st.session_state:
             st.session_state.previous_selected_council = selected_council
-        elif st.session_state.previous_selected_council != selected_council:
-            clear_cache()
+        # elif st.session_state.previous_selected_council != selected_council:
+        #     clear_cache()
             st.session_state.previous_selected_council = selected_council
     
 
