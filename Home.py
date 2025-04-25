@@ -379,8 +379,11 @@ with col2_original:
                 gdf_results_agg = gdf_results_agg.sort_values("Average NDVI", ascending=True)
                 # visualise using matplotlib
                 import matplotlib.pyplot as plt
+                if st.session_state.aggregation_level == "LAD":
+                    st.write("Average NDVI per Borough - Top 10")
+                elif st.session_state.aggregation_level == "Council":
+                    st.write("Average NDVI per LSOA - Top 10")
 
-                st.write("Average NDVI per Borough - Top 10")
                 fig = plt.figure(figsize=(6, 14))
                 ax = plt.gca()
 
@@ -388,8 +391,8 @@ with col2_original:
                 fig.patch.set_alpha(0)
                 ax.patch.set_alpha(0)
 
-                gdf_results_agg.set_index(['borough_name'])['Average NDVI'].plot(kind='barh', ax=ax)
-                plt.xlabel('Borough')
+                gdf_results_agg.set_index(['borough_name'])['Average NDVI'].head(10)plot(kind='barh', ax=ax)
+                plt.xlabel('Location')
                 plt.ylabel('Average NDVI')
                 # plt.title('Average NDVI per Borough')
                 plt.xticks(rotation=0, fontsize=12)
