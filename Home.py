@@ -918,6 +918,23 @@ with col1_original:
                         # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
                         # london_boroughs_over_65 = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
                         london_boroughs_over_65 = pd.read_parquet('data/london_percentage_of_population_over_65.parquet.gzip')
+
+
+
+                        # load the lsoa level geometries
+                        gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
+                        # convert the wkt geometry to a shapely geometry
+                        gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
+                        # convert this to a geodataframe
+                        gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
+                        # filter the LAD11NM column to match the users  
+                        gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
+                        gdf_boroughs = gdf_boroughs[["LSOA11CD"]].rename(columns={"LSOA11CD":"geography code"})
+
+
+                        # do a spatial join to get the building density data for the selected council
+                        london_boroughs_over_65 = london_boroughs_over_65.merge(gdf_boroughs, on="geography code")
+
                         # convert the wkt geometry to a shapely geometry
                         london_boroughs_over_65["geometry"] = london_boroughs_over_65["geometry"].apply(shapely.wkt.loads)
                         # convert this to a geodataframe
@@ -930,19 +947,7 @@ with col1_original:
                         london_boroughs_over_65 = st.session_state.london_boroughs_over_65
 
 
-                       # load the lsoa level geometries
-                    gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
-                    # convert the wkt geometry to a shapely geometry
-                    gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
-                    # convert this to a geodataframe
-                    gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
-                    # filter the LAD11NM column to match the users  
-                    gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
-                    gdf_boroughs = gdf_boroughs[["LSOA11CD"]].rename(columns={"LSOA11CD":"geography code"})
 
-
-                    # do a spatial join to get the building density data for the selected council
-                    london_boroughs_over_65 = london_boroughs_over_65.merge(gdf_boroughs, on="geography code")
 
                     # calculate the midpoint of london
                     london_midpoint_latitude, london_midpoint_longitude = london_boroughs_over_65.to_crs(4326).geometry.centroid.y.mean(), london_boroughs_over_65.to_crs(4326).geometry.centroid.x.mean()
