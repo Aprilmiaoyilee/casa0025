@@ -1341,8 +1341,8 @@ with col1_original:
                     weighted_df["index_value"] = weighted_df[[x for x in weighted_df.columns if "weighted" in x]].sum(axis=1)
                     weighted_columns = [x for x in weighted_df.columns if "weighted" in x]
 
-                    st.write("Final index dataframe")
-                    st.dataframe(weighted_df.rename(columns={"borough_name":"Location"}).drop(columns=["geometry"]))
+                    # st.write("Final index dataframe")
+                    # st.dataframe(weighted_df.rename(columns={"borough_name":"Location"}).drop(columns=["geometry"]))
 
                     # ------------------------------------------------------------
 
