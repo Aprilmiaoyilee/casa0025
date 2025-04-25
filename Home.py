@@ -918,6 +918,23 @@ with col1_original:
                         # now we're going to add in the vector data for the london boroughs for number of people over 65 from a geojson file
                         # london_boroughs_over_65 = gp.read_file('data/london_percentage_of_population_over_65.geojson')#.head(10).to_crs(4326)
                         london_boroughs_over_65 = pd.read_parquet('data/london_percentage_of_population_over_65.parquet.gzip')
+
+
+
+                        # load the lsoa level geometries
+                        gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
+                        # convert the wkt geometry to a shapely geometry
+                        gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
+                        # convert this to a geodataframe
+                        gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
+                        # filter the LAD11NM column to match the users  
+                        gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
+                        gdf_boroughs = gdf_boroughs[["LSOA11CD"]].rename(columns={"LSOA11CD":"geography code"})
+
+
+                        # do a spatial join to get the building density data for the selected council
+                        london_boroughs_over_65 = london_boroughs_over_65.merge(gdf_boroughs, on="geography code")
+
                         # convert the wkt geometry to a shapely geometry
                         london_boroughs_over_65["geometry"] = london_boroughs_over_65["geometry"].apply(shapely.wkt.loads)
                         # convert this to a geodataframe
@@ -928,7 +945,10 @@ with col1_original:
                         st.session_state.london_boroughs_over_65 = london_boroughs_over_65
                     else:
                         london_boroughs_over_65 = st.session_state.london_boroughs_over_65
-                    
+
+
+
+
                     # calculate the midpoint of london
                     london_midpoint_latitude, london_midpoint_longitude = london_boroughs_over_65.to_crs(4326).geometry.centroid.y.mean(), london_boroughs_over_65.to_crs(4326).geometry.centroid.x.mean()
                     
@@ -951,19 +971,46 @@ with col1_original:
                 with st.spinner("Loading the building density data..."):
                     # we're going to load the building density data from a parquet file
                     if st.session_state.buildings_data_gdf is None:
-                        buildings_data_gdf = gp.read_file('data/lsoa_bmd_from paul.geojson')
+                        buildings_data_gdf = gp.read_file('data/lsoa_bmd_from paul.geojson').to_crs(4326)
 
 
 
                         st.session_state.buildings_data_gdf = buildings_data_gdf
                     else:
                         buildings_data_gdf = st.session_state.buildings_data_gdf  
-                        
+
+                    # load the lsoa level geometries
+                    gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
+                    # convert the wkt geometry to a shapely geometry
+                    gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
+                    # convert this to a geodataframe
+                    gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
+                    # filter the LAD11NM column to match the users  
+                    gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
+                    gdf_boroughs["LSOA_CD"] = gdf_boroughs["LSOA11CD"].astype(str)
+                    gdf_boroughs = gdf_boroughs[["LSOA11CD"]].rename(columns={"LSOA11CD":"LSOA_CD"})
+
+
+                    # do a spatial join to get the building density data for the selected council
+                    buildings_data_gdf = buildings_data_gdf.merge(gdf_boroughs, on="LSOA_CD")
+
+                    # rename columns for the map
+                    buildings_data_gdf = buildings_data_gdf.rename(columns={"bldg_dens":"Building Density",
+                                                                            "bldg_cnt":"Building Count",
+                                                                            "BORO":"Borough",
+                                                                            "tot_vol":"Total Volume"})
+                    # round these to 2 decimal places
+                    buildings_data_gdf["Building Density"] = buildings_data_gdf["Building Density"].round(2)
+                    buildings_data_gdf["Building Count"] = buildings_data_gdf["Building Count"].round(2)
+                    buildings_data_gdf["Total Volume"] = buildings_data_gdf["Total Volume"].round(2)
+
+                    # drop the wkt geometry column
+                    buildings_data_gdf = buildings_data_gdf.drop(columns=["wkt_geom"])
                     # now we're going to add this to the map
                     
                     if st.session_state.buildings_data_map is None:
                         # we'll plot this on a folium map
-                        m = buildings_data_gdf.explore("bldg_dens", tiles="CartoDB.Positron", cmap="Blues", scheme="naturalbreaks", legend_title="Building Density", style_kwds={'weight': 1})
+                        m = buildings_data_gdf.explore("Building Density", tiles="CartoDB.Positron", cmap="Blues", scheme="naturalbreaks", legend_title="Building Density", style_kwds={'weight': 1})
                     
                         # we're going to cache this map as well 
                         st.session_state.buildings_data_map = m
@@ -974,6 +1021,9 @@ with col1_original:
                     st.success("Successfully loaded building density data")
                     # st_folium(m, width=725)
                     st_folium(m, width=725, returned_objects=[])
+
+                    # clear cache
+                    clear_cache()
 
 
             elif collection == "Index":
