@@ -952,6 +952,7 @@ with col1_original:
                     # we're going to load the building density data from a parquet file
                     if st.session_state.buildings_data_gdf is None:
                         buildings_data_gdf = gp.read_file('data/lsoa_bmd_from paul.geojson').to_crs(4326)
+                        st.write(buildings_data_gdf)
 
 
 
@@ -967,7 +968,7 @@ with col1_original:
                     gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
                     # filter the LAD11NM column to match the users  
                     gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
-                    gdf_boroughs["LSOA11CD"] = buildings_data_gdf["LSOA11CD"].astype(str)
+                    gdf_boroughs["LSOA_CD"] = buildings_data_gdf["LSOA11CD"].astype(str)
                     gdf_boroughs = gdf_boroughs[["LSOA11CD"]].rename(columns={"LSOA11CD":"LSOA_CD"})
 
                     st.write(gdf_boroughs)
