@@ -391,7 +391,7 @@ with col2_original:
                 fig.patch.set_alpha(0)
                 ax.patch.set_alpha(0)
 
-                gdf_results_agg.set_index(['borough_name'])['Average NDVI'].head(10)plot(kind='barh', ax=ax)
+                gdf_results_agg.set_index(['borough_name'])['Average NDVI'].head(10).plot(kind='barh', ax=ax)
                 plt.xlabel('Location')
                 plt.ylabel('Average NDVI')
                 # plt.title('Average NDVI per Borough')
