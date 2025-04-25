@@ -134,7 +134,8 @@ if "previous_selected_council" not in st.session_state:
     st.session_state.previous_selected_council = None
 if "date_range_selection" not in st.session_state:
     st.session_state.date_range_selection = None
-
+if "buildings_data_map" not in st.session_state:
+    st.session_state.buildings_data_map = None
 
 
 col1_original, col2_original = st.columns([2,12])
