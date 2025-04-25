@@ -287,7 +287,7 @@ with col2_original:
                     gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
                     # filter the LAD11NM column to match the users  
                     gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
-                    gdf_boroughs = gdf_boroughs[["LSOA11NM","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
+                    gdf_boroughs = gdf_boroughs[["LSOA11CD","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
                     st.session_state.gdf_boroughs = gdf_boroughs
             else:
                 gdf_boroughs = st.session_state.gdf_boroughs
