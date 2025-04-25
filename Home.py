@@ -1292,7 +1292,7 @@ with col1_original:
 
                     # now we are going to merge these altogether
                     raw_index_values_gdf_boroughs = gdf_boroughs.merge(london_boroughs_over_65_gdf, on="borough_name", how="left").merge(temperature_gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(buildings_data_df, on="borough_name", how="left")
-
+                    raw_index_values_gdf_boroughs.columns = [x.lower() for x in raw_index_values_gdf_boroughs.columns]
                     st.write("Merged dataframe")
                     st.dataframe(raw_index_values_gdf_boroughs)
 
@@ -1300,7 +1300,7 @@ with col1_original:
                     # okay so now we're going to normalise the data values  using sklearn min max scaler
                     scaler = MinMaxScaler()
                     # first we'll get the columns we want to normalise
-                    columns_to_normalise = ["NDVI","surface_temperature","pct_over_65_pop","building_density"]
+                    columns_to_normalise = ["ndvi","surface_temperature","pct_over_65_pop","building_density"]
 
                     for column in columns_to_normalise:
                         raw_index_values_gdf_boroughs[f"{column}_normalised"] = scaler.fit_transform(raw_index_values_gdf_boroughs[[column]])
@@ -1330,8 +1330,8 @@ with col1_original:
 
                     # ------------------------------------------------------------
 
-                    viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value".replace("_"," ").title()] + [x.split("_normalised")[0].replace("_"," ").title() for x in weighted_columns if x != "ndvi"] + [x.upper() for x in weighted_columns if x.upper() == "NDVI"])
-                    if "NDVI" in viz_layer:
+                    viz_layer = st.selectbox("Select the layer you'd like to show", ["index_value".replace("_"," ").title()] + [x.split("_normalised")[0].replace("_"," ").title() for x in weighted_columns if x != "ndvi"])
+                    if "ndvi" in viz_layer:
                         weighted_df[viz_layer] = 1 / (weighted_df[viz_layer] + 0.01)
                     # now we're going to add this to the map # comment this as this has been moved under the viz_col1 below
                     # m = weighted_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges", scheme="naturalbreaks", legend_title=viz_layer)
@@ -1346,7 +1346,7 @@ with col1_original:
                     if "ndvi" not in viz_layer.lower():
                         viz_layer = [x for x in (["index_value"] + [x for x in weighted_df.columns]) if viz_layer.split(" ")[0].lower() in x][0]
                     else:
-                        viz_layer = "NDVI"
+                        viz_layer = "ndvi"
                     st.write(viz_layer)
 
                     # Display the map in the first column
