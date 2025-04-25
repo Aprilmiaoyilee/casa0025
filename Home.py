@@ -241,15 +241,17 @@ with col1_original:
     # this is for the streamlit deployed version
     # geemap.ee_initialize(project=service_account_info)
 
-    message_placeholder = st.empty()
+    authentication_placeholder = st.empty()
 
     if collection != "":
-        message_placeholder.success("Successfully authenticated with Google Earth Engine")
+        authentication_placeholder.success("Successfully authenticated with Google Earth Engine")
         time.sleep(2)
-        message_placeholder.empty()
+        authentication_placeholder.empty()
 
 
         with col2_original:
+
+            message_placeholder = st.empty()
 
             if collection == "NAIP":
                 # Define the map center and zoom level
