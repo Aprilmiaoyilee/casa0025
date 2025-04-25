@@ -356,7 +356,11 @@ with col2_original:
             with col1:
 
                 m = geemap.Map()
-                m.set_center(london_midpoint_longitude, london_midpoint_latitude, 10)
+                m.add_basemap("CartoDB.Positron")
+                if st.session_state.aggregation_level == "LAD":
+                    m.set_center(london_midpoint_longitude, london_midpoint_latitude, 10)
+                elif st.session_state.aggregation_level == "Council":
+                    m.set_center(london_midpoint_longitude, london_midpoint_latitude, 12)
 
                 # 🖼️ Add the NDVI image itself
                 ndvi_vis = {
