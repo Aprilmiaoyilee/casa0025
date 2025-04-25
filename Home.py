@@ -309,11 +309,15 @@ with col2_original:
                 # 2️ Convert GeoDataFrame → EE FeatureCollection
                 ee_boroughs = geemap.geopandas_to_ee(gdf_boroughs, geodesic=False)
                 st.session_state.ee_boroughs = ee_boroughs
+
+                today = datetime.now().strftime("%Y-%m-%d")
+                # then we're going to get the today's date a year ago
+                one_year_ago = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
                 # 3️ Build Sentinel‑2 NDVI composite
                 sentinel = (
                     ee.ImageCollection('COPERNICUS/S2_SR')
                     .filterBounds(ee_boroughs)
-                    .filterDate('2020-06-01', '2020-09-30')
+                    .filterDate(one_year_ago,today)
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 10))
                     .median()
                     .clip(ee_boroughs)
