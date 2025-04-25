@@ -1375,13 +1375,13 @@ with col1_original:
                         # ax.tick_params(axis='y', labelsize=8)
                         # plt.tight_layout()
 
-                        st.write(weighted_df)
                         # TM version of the bar chart as using ax is getting some odd results
                         fig = plt.figure(figsize=(4, 5))
                         ax = plt.gca()
                         sorted_df.set_index(label_column).index_value.sort_values(ascending=True).plot(kind="barh", color="#FF4500", ax=ax)
                         plt.xlabel("Locations")
                         plt.tight_layout()
+                        sns.despine()
 
 
                         # Display the chart
