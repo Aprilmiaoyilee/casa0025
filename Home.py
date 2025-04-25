@@ -76,7 +76,43 @@ st.set_page_config(
     layout="wide"
 )
 st.title("Google Earth Engine - Demo application")
-st.text_area("App Purpose", "This app is calculating a heat vulnerability index at two levels, LADs and LSOAs. \n It combines lst, ndvi, building densities and the proportion of residents aged 65 and above.", height=68, disabled=True)
+
+with st.expander("Read more"):
+    st.markdown("""
+    This application features **interactive maps** that allow users to toggle individual layers or view heat risk across **London Boroughs**, using an index that combines several datasets:
+    
+    ---
+    
+    ### **Land Surface Temperature**  
+    **Source**: *Landsat 8 via Google Earth Engine*  
+    - Measures surface heat intensity  
+    - Identifies urban heat islands  
+    - Uses **summer-only data** (June–September) to reflect peak seasonal risk  
+    
+    ---
+    
+    ### **Normalized Difference Vegetation Index (NDVI)**  
+    **Source**: *Sentinel 2 via Google Earth Engine*  
+    - Assesses vegetation coverage  
+    - Low NDVI indicates minimal green cover and **greater heat retention**
+    
+    ---
+    
+    ###  **Population Density (Age 65+)**  
+    **Source**: *UK Census 2021*  
+    - Highlights areas with **older adults**, who are more vulnerable to heat-related illnesses
+    
+    ---
+    
+    ###  **Building Mass Density**  
+    **Source**: *Ordnance Survey National Geographic Database (OS NGD)*  
+    - Dense built environments **absorb more heat** and cool down slower  
+    - Total building mass is calculated for each **LSOA or borough**
+    
+    Using a composite scoring method, the map identifies hotspots where high temperatures, low vegetation, dense urban structures, and vulnerable populations (such as older adults) overlap. Users can interact with these maps to assess local risks and download each dataset from various time periods. 
+    
+    Users can also download each dataset individually; these downloads include overall average values, making them useful for summarising or comparing across boroughs.
+    """)
 
 if st.button("Reset App"):
     st.session_state.clear()  # This clears all session state variables
