@@ -975,7 +975,19 @@ with col1_original:
 
                     # do a spatial join to get the building density data for the selected council
                     buildings_data_gdf = buildings_data_gdf.merge(gdf_boroughs, on="LSOA_CD")
-                        
+
+                    # rename columns for the map
+                    buildings_data_gdf = buildings_data_gdf.rename(columns={"bldg_dens":"Building Density",
+                                                                            "bldg_count":"Building Count",
+                                                                            "BORO":"Borough",
+                                                                            "tot_vol":"Total Volume"})
+                    # round these to 2 decimal places
+                    buildings_data_gdf["Building Density"] = buildings_data_gdf["Building Density"].round(2)
+                    buildings_data_gdf["Building Count"] = buildings_data_gdf["Building Count"].round(2)
+                    buildings_data_gdf["Total Volume"] = buildings_data_gdf["Total Volume"].round(2)
+
+                    # drop the wkt geometry column
+                    buildings_data_gdf = buildings_data_gdf.drop(columns=["wkt_geom"])
                     # now we're going to add this to the map
                     
                     if st.session_state.buildings_data_map is None:
