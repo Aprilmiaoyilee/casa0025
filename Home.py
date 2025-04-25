@@ -56,6 +56,20 @@ def get_auth():
 
 get_auth()
 
+def clear_cache():
+    """Clear all cached values from session state except for authentication"""
+    cache_keys = [
+        'gdf_results', 'time_series_gdf', 'ndvi', 'ee_boroughs', 
+        'nox_layer', 'london_midpoint_latitude', 'london_midpoint_longitude',
+        'fc_results', 'temperature_layer', 'london_boroughs_over_65',
+        'london_boroughs_over_65_map', 'london_boroughs_over_65_map_key',
+        'lad_data', 'london_lsoa_over_65_gdf', 'gdf_boroughs',
+        'buildings_data_gdf', 'buildings_data_df'
+    ]
+    
+    for key in cache_keys:
+        if key in st.session_state:
+            del st.session_state[key]
 
 st.set_page_config(
     layout="wide"
@@ -119,6 +133,12 @@ col1_original, col2_original = st.columns([2,12])
 with col1_original:
 
     aggregation_level = st.selectbox("Select aggregation level", ["","LAD","Council"])
+    if 'previous_aggregation_level' not in st.session_state:
+        st.session_state.previous_aggregation_level = aggregation_level
+    elif st.session_state.previous_aggregation_level != aggregation_level:
+        clear_cache()
+    st.session_state.previous_aggregation_level = aggregation_level
+
     # the user must select a aggregation level
     if aggregation_level == "":
         st.error("Please select an aggregation level")
@@ -127,7 +147,17 @@ with col1_original:
         st.session_state.aggregation_level = aggregation_level
 
     if aggregation_level == "Council":
-        selected_council = st.selectbox("Select council", [""]+gp.read_file("data/london_lad.geojson")["lad11nm"].unique().tolist())
+        selected_council = st.selectbox("Select council", [""]+gp.read_file("data/london_lad.geojson")
+        ["lad11nm"].unique().tolist())
+
+        # Add this after the council selectbox
+        if 'previous_selected_council' not in st.session_state:
+            st.session_state.previous_selected_council = selected_council
+        elif st.session_state.previous_selected_council != selected_council:
+            clear_cache()
+            st.session_state.previous_selected_council = selected_council
+    
+
         # the user must select a council
         if selected_council == "":
             st.error("Please select a council")
@@ -169,6 +199,10 @@ with col1_original:
             st.stop()
         else:
             st.session_state.collection = collection
+
+
+
+        
 
 
 
