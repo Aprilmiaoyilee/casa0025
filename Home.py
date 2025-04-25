@@ -1411,7 +1411,7 @@ with col1_original:
                         # for the index_value column, round to 2 decimal places
                         weighted_df["index_value"] = weighted_df["index_value"].round(2)
                         # make a new column with the index value rank
-                        weighted_df["index_value_rank"] = weighted_df["index_value"].rank(method="min")
+                        weighted_df["index_value_rank"] = weighted_df["index_value"].rank(method="max")
                         # update the viz_layer
                         weighted_df.rename(columns={"borough_name":"Location"}, inplace=True)
 
