@@ -958,6 +958,19 @@ with col1_original:
                         st.session_state.buildings_data_gdf = buildings_data_gdf
                     else:
                         buildings_data_gdf = st.session_state.buildings_data_gdf  
+
+                    # load the lsoa level geometries
+                    gdf_lsoas = pd.read_parquet('data/london_lsoas_2011_mapping_file.parquet.gzip')
+                    # convert the wkt geometry to a shapely geometry
+                    gdf_lsoas["geometry"] = gdf_lsoas["geometry"].apply(shapely.wkt.loads)
+                    # convert this to a geodataframe
+                    gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
+                    # filter the LAD11NM column to match the users  
+                    gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
+                    gdf_boroughs = gdf_boroughs[["LSOA11CD","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
+
+                    # do a spatial join to get the building density data for the selected council
+                    buildings_data_gdf = gp.sjoin(buildings_data_gdf, gdf_boroughs, how="left", predicate="intersects")
                         
                     # now we're going to add this to the map
                     
