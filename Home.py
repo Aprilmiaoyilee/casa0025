@@ -1401,6 +1401,8 @@ with col1_original:
                     # Display the map in the first column
                     with viz_col1:
                         # Create the map here instead
+                        # update column names for the map
+                        weighted_df.columns = [x.split("_normalised")[0].replace("_"," ").title() for x in weighted_df.columns if "normalised" in x]
                         m = weighted_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges",
                                                 scheme="naturalbreaks", legend_title=viz_layer)
                         st_folium(m, width=725, returned_objects=[])
