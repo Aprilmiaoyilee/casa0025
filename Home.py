@@ -695,6 +695,9 @@ with col1_original:
 
             elif collection == "Temperature":
                 with st.spinner("Loading London Boroughs..."):
+
+                    if st.session_state.previous_selected_council == st.session_state.selected_council:
+                        clear_cache()
                     # 2️ Convert GeoDataFrame → EE FeatureCollection
                     today = datetime.now().strftime("%Y-%m-%d")
                     # then we're going to get the today's date a year ago
