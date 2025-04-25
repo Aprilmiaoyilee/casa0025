@@ -967,13 +967,14 @@ with col1_original:
                     gdf_lsoas = gp.GeoDataFrame(gdf_lsoas, geometry="geometry", crs=4326)
                     # filter the LAD11NM column to match the users  
                     gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
-                    gdf_boroughs = gdf_boroughs[["LSOA11CD","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
+                    gdf_boroughs["LSOA11CD"] = buildings_data_gdf["LSOA11CD"].astype(str)
+                    gdf_boroughs = gdf_boroughs[["LSOA11CD"]].rename(columns={"LSOA11CD":"LSOA_CD"})
 
                     st.write(gdf_boroughs)
                     st.write(buildings_data_gdf)
 
                     # do a spatial join to get the building density data for the selected council
-                    buildings_data_gdf = gp.sjoin(buildings_data_gdf, gdf_boroughs, how="left", predicate="intersects")
+                    buildings_data_gdf = buildings_data_gdf.merge(gdf_boroughs, on="LSOA_CD")
                         
                     # now we're going to add this to the map
                     
