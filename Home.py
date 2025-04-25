@@ -147,7 +147,9 @@ with col1_original:
         st.session_state.user_selected_start_date = user_selected_start_date
         st.session_state.user_selected_end_date = user_selected_end_date
 
-    if date_range_selection != "":
+    if date_range_selection == "":
+        st.stop()
+    else:
         collection = st.selectbox("Select satellite image collection", ["",
                                                                         # "NAIP",
                                                                         # "Landsat",
