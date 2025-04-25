@@ -1125,6 +1125,7 @@ with col1_original:
 
                         # 2️ Convert GeoDataFrame → EE FeatureCollection
                         ee_boroughs = geemap.geopandas_to_ee(gdf_boroughs, geodesic=False)
+                        st.write(ee_boroughs)
                         st.session_state.ee_boroughs = ee_boroughs
                         # 3️ Build Sentinel‑2 NDVI composite
                         sentinel = (
