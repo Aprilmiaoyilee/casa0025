@@ -438,36 +438,42 @@ with col2_original:
                 time_series_gdf_container = []
                 # now that we have the date ranges we care about we're going to iterate and collect the values for each Borough and time period
                 for month_value in range(len(end_dates_list)):
-                    # st.write(start_dates_list[month_value], end_dates_list[month_value])
-                    sentinel = (
-                        ee.ImageCollection('COPERNICUS/S2_SR')
-                        .filterBounds(ee_boroughs)
-                        .filterDate(start_dates_list[month_value], end_dates_list[month_value])
-                        .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 30))
-                        .median()
-                        .clip(ee_boroughs)
-                    )
-                    ndvi = sentinel.normalizedDifference(['B8', 'B4']).rename('NDVI')
-                    print(ndvi)
+                    try:
 
-                    # 4️ Sum NDVI per borough
-                    fc_results = ndvi.reduceRegions(
-                        collection=ee_boroughs,
-                        reducer=ee.Reducer.mean(),
-                        scale=10,
-                        crs='EPSG:27700'
-                    )
-                    st.session_state.fc_results = fc_results
-                    # 5️⃣Pull results client‑side as GeoJSON → GeoDataFrame
-                    geojson = fc_results.getInfo()
-                    temp_gdf_results = gp.GeoDataFrame.from_features(geojson['features']).rename(columns={'NAME': 'borough_name',"mean": "NDVI"})
-                    temp_gdf_results["start_date"] = pd.to_datetime(start_dates_list[month_value])
-                    temp_gdf_results["end_date"] = end_dates_list[month_value]
-                    time_series_gdf_container.append(temp_gdf_results)
+                        # st.write(start_dates_list[month_value], end_dates_list[month_value])
+                        sentinel = (
+                            ee.ImageCollection('COPERNICUS/S2_SR')
+                            .filterBounds(ee_boroughs)
+                            .filterDate(start_dates_list[month_value], end_dates_list[month_value])
+                            .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 30))
+                            .median()
+                            .clip(ee_boroughs)
+                        )
+                        ndvi = sentinel.normalizedDifference(['B8', 'B4']).rename('NDVI')
+                        print(ndvi)
 
-                
-                    time_series_gdf = pd.concat(time_series_gdf_container, ignore_index=True).drop(columns=['geometry'])
-                    st.session_state.time_series_gdf = time_series_gdf
+                        # 4️ Sum NDVI per borough
+                        fc_results = ndvi.reduceRegions(
+                            collection=ee_boroughs,
+                            reducer=ee.Reducer.mean(),
+                            scale=10,
+                            crs='EPSG:27700'
+                        )
+                        st.session_state.fc_results = fc_results
+                        # 5️⃣Pull results client‑side as GeoJSON → GeoDataFrame
+                        geojson = fc_results.getInfo()
+                        temp_gdf_results = gp.GeoDataFrame.from_features(geojson['features']).rename(columns={'NAME': 'borough_name',"mean": "NDVI"})
+                        temp_gdf_results["start_date"] = pd.to_datetime(start_dates_list[month_value])
+                        temp_gdf_results["end_date"] = end_dates_list[month_value]
+                        time_series_gdf_container.append(temp_gdf_results)
+
+                    
+                        time_series_gdf = pd.concat(time_series_gdf_container, ignore_index=True).drop(columns=['geometry'])
+                        st.session_state.time_series_gdf = time_series_gdf
+                    except Exception as e:
+                        if e=="""EEException: Image.normalizedDifference: No band named 'B8'. Available band names: [].""":
+                            st.error("No NDVI data available for this period")
+                            pass
             else:
                 time_series_gdf = st.session_state.time_series_gdf
                 fc_results = st.session_state.fc_results
