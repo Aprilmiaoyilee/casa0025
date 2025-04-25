@@ -1058,6 +1058,9 @@ with col1_original:
                     today = datetime.now().strftime("%Y-%m-%d")
                     one_year_ago = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
 
+                    message_placeholder = st.empty()
+                    message_placeholder.info("Loading data")
+
                     if st.session_state.lad_data is None:
 
                         # check to see what level of aggregation the user has selected
@@ -1137,6 +1140,11 @@ with col1_original:
                     else:
                         buildings_data_gdf = st.session_state.buildings_data_gdf
 
+
+
+                    # update the message placeholder
+                    message_placeholder.empty()
+                    message_placeholder.info("Loading NDVI data")
                     # ------------------------------------------------------------
                     # now we're going to use the lad data to get the NDVI
                     if st.session_state.gdf_results is None:
@@ -1185,6 +1193,10 @@ with col1_original:
                         gdf_results = st.session_state.gdf_results
                         ndvi = st.session_state.ndvi
                         ee_boroughs = st.session_state.ee_boroughs
+
+                    # update the message placeholder
+                    message_placeholder.empty()
+                    message_placeholder.info("Loading temperature data")
 
                     # ------------------------------------------------------------
                     # now we're going to get the temperature data
@@ -1259,6 +1271,13 @@ with col1_original:
                     geojson = temperature_results.getInfo()
                     
                     temperature_gdf_results = gp.GeoDataFrame.from_features(geojson['features']).rename(columns={'NAME': 'MSOA Name',"median": "surface_temperature"})
+                    
+                    
+                    # update the message placeholder
+                    message_placeholder.empty()
+                    message_placeholder.info("Loading vulnerable population data")
+                    time.sleep(2)
+                    message_placeholder.empty()
                     # ------------------------------------------------------------
                     # next we will aggregate the age data to the borough level
                     # do a spatial join between the age data and the lad data 
@@ -1285,6 +1304,14 @@ with col1_original:
                     # buildings_data_df = buildings_data_df.merge(buildings_data_df_area[["borough_name","area"]], on="borough_name", how="left")
                     # buildings_data_df["building_density"] = buildings_data_df["building_area"] / buildings_data_df["area"]
                     # buildings_data_df = buildings_data_df.drop(columns=["area","building_area"])
+
+
+
+                    # update the message placeholder
+                    message_placeholder.empty()
+                    message_placeholder.info("Loading building density data")
+                    time.sleep(2)
+                    message_placeholder.empty()
                     # ------------------------------------------------------------
                     # this is the new code for getting the number of buildings in each borough
                     # ------------------------------------------------------------
@@ -1308,7 +1335,11 @@ with col1_original:
                     # st.write("Buildings dataframe")
                     # st.dataframe(buildings_data_df)
 
-
+                    # update the message placeholder
+                    message_placeholder.empty()
+                    message_placeholder.info("Calculating index data")
+                    time.sleep(2)
+                    message_placeholder.empty()
                     # now we are going to merge these altogether
                     raw_index_values_gdf_boroughs = gdf_boroughs.merge(london_boroughs_over_65_gdf, on="borough_name", how="left").merge(temperature_gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(gdf_results.drop(columns=["geometry"]), on="borough_name", how="left").merge(buildings_data_df, on="borough_name", how="left")
                     raw_index_values_gdf_boroughs.columns = [x.lower() for x in raw_index_values_gdf_boroughs.columns]
