@@ -978,7 +978,7 @@ with col1_original:
 
                     # rename columns for the map
                     buildings_data_gdf = buildings_data_gdf.rename(columns={"bldg_dens":"Building Density",
-                                                                            "bldg_count":"Building Count",
+                                                                            "bldg_cnt":"Building Count",
                                                                             "BORO":"Borough",
                                                                             "tot_vol":"Total Volume"})
                     # round these to 2 decimal places
