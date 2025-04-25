@@ -289,6 +289,8 @@ with col2_original:
                     gdf_boroughs = gdf_lsoas[gdf_lsoas["LAD11NM"] == st.session_state.selected_council]
                     gdf_boroughs = gdf_boroughs[["LSOA11CD","geometry"]].rename(columns={"LSOA11CD":"borough_name"})
                     st.session_state.gdf_boroughs = gdf_boroughs
+            else:
+                gdf_boroughs = st.session_state.gdf_boroughs
             # st.write(f"{gdf_boroughs.columns}")
             # [['lad22nm', 'geometry']]  # select only name + geometry
                 if st.session_state.london_midpoint_latitude is None:
