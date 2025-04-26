@@ -1457,6 +1457,9 @@ with col1_original:
                         # update the viz_layer
                         visualisation_df.rename(columns={"borough_name":"Location"}, inplace=True)
 
+                        st.dataframe(visualisation_df)
+
+
                         m = visualisation_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges",
                                                 scheme="naturalbreaks", legend_title=viz_layer)
                         st_folium(m, width=725, returned_objects=[])
@@ -1481,7 +1484,7 @@ with col1_original:
 
 
                         # Sort the data for better visualization and take top 10
-                        viz_layer = [x for x in visualisation_df.columns if viz_layer.split(" ")[0].lower() in x][0]
+                        # viz_layer = [x for x in visualisation_df.columns if viz_layer.split(" ")[0].lower() in x][0]
                         sorted_df = visualisation_df.sort_values(viz_layer, ascending=False).head(10)
 
                         # Create the bar chart
