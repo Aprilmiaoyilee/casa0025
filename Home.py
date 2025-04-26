@@ -1457,10 +1457,15 @@ with col1_original:
                         visualisation_df.rename(columns={"borough_name":"Location"}, inplace=True)
 
                         st.dataframe(visualisation_df)
-                        lowered_viz_layer = viz_layer.lower().split("_")[0].title()
-                        st.write("this is the lowered viz layer", lowered_viz_layer)
-                        chosen_column = [x for x in visualisation_df.columns if lowered_viz_layer in x]
-                        st.write("this is the chosen column", chosen_column)
+
+                        # if the viz_layer is index_value, then we need to use the index_value column
+                        if viz_layer=="index_value":
+                            chosen_column = ["index_value"]
+                        else:
+                            lowered_viz_layer = viz_layer.lower().split("_")[0].title()
+                            st.write("this is the lowered viz layer", lowered_viz_layer)
+                            chosen_column = [x for x in visualisation_df.columns if lowered_viz_layer in x]
+                            st.write("this is the chosen column", chosen_column)
 
 
                         m = visualisation_df.explore(chosen_column[0], tiles="CartoDB.Positron", cmap="Oranges",
