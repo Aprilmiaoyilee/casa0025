@@ -1463,7 +1463,7 @@ with col1_original:
                         st.write("this is the chosen column", chosen_column)
 
 
-                        m = visualisation_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges",
+                        m = visualisation_df.explore(chosen_column, tiles="CartoDB.Positron", cmap="Oranges",
                                                 scheme="naturalbreaks", legend_title=viz_layer)
                         st_folium(m, width=725, returned_objects=[])
 
