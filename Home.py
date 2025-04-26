@@ -1457,7 +1457,8 @@ with col1_original:
                         visualisation_df.rename(columns={"borough_name":"Location"}, inplace=True)
 
                         st.dataframe(visualisation_df)
-
+                        lowered_viz_layer = viz_layer.lower().split("_")[0]
+                        st.write("this is the lowered viz layer", lowered_viz_layer)
                         chosen_column = [x.lower() for x in visualisation_df.columns if viz_layer.split("_")[0].lower() in x]
                         st.write("this is the chosen column", chosen_column)
 
