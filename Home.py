@@ -1436,7 +1436,7 @@ with col1_original:
                     viz_col1, viz_col2 = st.columns([7, 3])
                     viz_layer = [x for x in (["index_value"] + [x for x in weighted_df.columns]) if viz_layer.split("_normalised")[0].split(" ")[0].lower() in x][0]
 
-                    st.write(viz_layer)
+                    # st.write(viz_layer)
 
                     visualisation_df = weighted_df.copy()
                     # Display the map in the first column
@@ -1456,16 +1456,16 @@ with col1_original:
                         # update the viz_layer
                         visualisation_df.rename(columns={"borough_name":"Location"}, inplace=True)
 
-                        st.dataframe(visualisation_df)
+                        # st.dataframe(visualisation_df)
 
                         # if the viz_layer is index_value, then we need to use the index_value column
                         if viz_layer=="index_value":
                             chosen_column = ["index_value"]
                         else:
                             lowered_viz_layer = viz_layer.lower().split("_")[0].title()
-                            st.write("this is the lowered viz layer", lowered_viz_layer)
+                            # st.write("this is the lowered viz layer", lowered_viz_layer)
                             chosen_column = [x for x in visualisation_df.columns if lowered_viz_layer in x]
-                            st.write("this is the chosen column", chosen_column)
+                            # st.write("this is the chosen column", chosen_column)
 
 
                         m = visualisation_df.explore(chosen_column[0], tiles="CartoDB.Positron", cmap="Oranges",
