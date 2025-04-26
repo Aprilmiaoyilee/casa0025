@@ -1477,11 +1477,11 @@ with col1_original:
                         if st.session_state.aggregation_level == "LAD":
                             st.write("Top 10 Priority Boroughs")
                             label_column = "Location"
-                            xlabel = "Index Value"
+                            xlabel = chosen_column[0].replace("_"," ").title()
                         else:  # Council level
                             st.write(f"Top 10 Priority Areas in {selected_council} ")
                             label_column = "Location"  # actually LSOA11CD
-                            xlabel = "Index Value"
+                            xlabel = chosen_column[0].replace("_"," ").title()
 
                         import matplotlib.pyplot as plt
 
