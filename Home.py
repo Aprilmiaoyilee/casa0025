@@ -1488,7 +1488,7 @@ with col1_original:
 
                         # Sort the data for better visualization and take top 10
                         # viz_layer = [x for x in visualisation_df.columns if viz_layer.split(" ")[0].lower() in x][0]
-                        sorted_df = visualisation_df.sort_values(viz_layer, ascending=False).head(10)
+                        sorted_df = visualisation_df.sort_values(chosen_column[0], ascending=False).head(10)
 
                         # Create the bar chart
                         # fig, ax = plt.subplots(figsize=(4, 5))
@@ -1500,7 +1500,7 @@ with col1_original:
                         # TM version of the bar chart as using ax is getting some odd results
                         fig = plt.figure(figsize=(4, 5))
                         ax = plt.gca()
-                        sorted_df.set_index(label_column).index_value.sort_values(ascending=True).plot(kind="barh", color="#FF4500", ax=ax)
+                        sorted_df.set_index(label_column)[chosen_column[0]].sort_values(ascending=True).plot(kind="barh", color="#FF4500", ax=ax)
                         plt.xlabel(xlabel)
                         plt.ylabel("Locations")
                         plt.tight_layout()
