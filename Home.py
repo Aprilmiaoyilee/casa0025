@@ -1458,6 +1458,9 @@ with col1_original:
 
                         st.dataframe(visualisation_df)
 
+                        chosen_column = [x for x in visualisation_df.columns if viz_layer.split("_")[0].split(" ")[0].lower() in x][0]
+                        st.write("this is the chosen column", chosen_column)
+
 
                         m = visualisation_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges",
                                                 scheme="naturalbreaks", legend_title=viz_layer)
