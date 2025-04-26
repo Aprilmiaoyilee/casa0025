@@ -1458,7 +1458,7 @@ with col1_original:
 
                         st.dataframe(visualisation_df)
 
-                        chosen_column = [x for x in visualisation_df.columns if viz_layer.split("_")[0].lower() in x]
+                        chosen_column = [x.lower() for x in visualisation_df.columns if viz_layer.split("_")[0].lower() in x]
                         st.write("this is the chosen column", chosen_column)
 
 
