@@ -110,6 +110,7 @@ with st.expander("Read more"):
     **Source**: *Ordnance Survey National Geographic Database (OS NGD)*  
     - Dense built environments **absorb more heat** and cool down slower  
     - Total building mass is calculated for each **LSOA or borough**
+    - Data provided in collaboration with London Borough of Camden under *&copy; Crown copyright and database rights 2025 OS AC0000849991*
     
     Using a composite scoring method, the map identifies hotspots where high temperatures, low vegetation, dense urban structures, and vulnerable populations (such as older adults) overlap. Users can interact with these maps to assess local risks and download each dataset from various time periods. 
     
@@ -1514,7 +1515,7 @@ with col1_original:
 
                     # Add an index explanation
                     st.markdown("""
-                    Each factor is weighted equally (25%) and the weight can be adjusted for user preference.
+                    Each factor is weighted equally (25%), download the data here.
                     """)
                     # ── create CSV in memory ──
                     csv_bytes = weighted_df.to_csv(index=False).encode("utf-8")          # simplest way
