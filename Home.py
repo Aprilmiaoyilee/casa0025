@@ -1438,30 +1438,31 @@ with col1_original:
 
                     st.write(viz_layer)
 
-
+                    visualisation_df = weighted_df.copy()
+                    st.dataframe(visualisation_df)
                     # Display the map in the first column
                     with viz_col1:
                         # Create the map here instead
                         # update column names for the map
-                        for column in weighted_df.columns:  
+                        for column in visualisation_df.columns:  
                             if "normalised" in column:
                                 # round the normalised values to 2 decimal places
-                                weighted_df[column] = weighted_df[column].round(2)
-                                weighted_df = weighted_df.rename(columns={column: column.split("_normalised")[0].replace("_"," ").title()})
+                                visualisation_df[column] = visualisation_df[column].round(2)
+                                visualisation_df = visualisation_df.rename(columns={column: column.split("_normalised")[0].replace("_"," ").title()})
 
                         # for the index_value column, round to 2 decimal places
-                        weighted_df["index_value"] = weighted_df["index_value"].round(2)
+                        visualisation_df["index_value"] = visualisation_df["index_value"].round(2)
                         # make a new column with the index value rank
-                        weighted_df["index_value_rank"] = weighted_df["index_value"].rank(method="max", ascending=False)
+                        visualisation_df["index_value_rank"] = visualisation_df["index_value"].rank(method="max", ascending=False)
                         # update the viz_layer
-                        weighted_df.rename(columns={"borough_name":"Location"}, inplace=True)
+                        visualisation_df.rename(columns={"borough_name":"Location"}, inplace=True)
 
-                        m = weighted_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges",
+                        m = visualisation_df.explore(viz_layer, tiles="CartoDB.Positron", cmap="Oranges",
                                                 scheme="naturalbreaks", legend_title=viz_layer)
                         st_folium(m, width=725, returned_objects=[])
 
                         # now drop some of the columns we added and renamed
-                        weighted_df = weighted_df.drop(columns=["index_value_rank"])
+                        visualisation_df = visualisation_df.drop(columns=["index_value_rank"])
                         
                     # Display the bar chart in the second column to show top 10 index rankings
                     with viz_col2:
@@ -1480,8 +1481,8 @@ with col1_original:
 
 
                         # Sort the data for better visualization and take top 10
-                        viz_layer = [x for x in weighted_df.columns if viz_layer.split(" ")[0].lower() in x][0]
-                        sorted_df = weighted_df.sort_values(viz_layer, ascending=False).head(10)
+                        viz_layer = [x for x in visualisation_df.columns if viz_layer.split(" ")[0].lower() in x][0]
+                        sorted_df = visualisation_df.sort_values(viz_layer, ascending=False).head(10)
 
                         # Create the bar chart
                         # fig, ax = plt.subplots(figsize=(4, 5))
@@ -1520,7 +1521,7 @@ with col1_original:
                     Each factor is weighted equally (25%), download the data here.
                     """)
                     # ── create CSV in memory ──
-                    csv_bytes = weighted_df.to_csv(index=False).encode("utf-8")          # simplest way
+                    csv_bytes = visualisation_df.to_csv(index=False).encode("utf-8")          # simplest way
 
                     # ── download button ──
                     st.download_button(
@@ -1532,7 +1533,7 @@ with col1_original:
                     )
 
                     # clear up memory by deleting the dataframe variables except the last one 
-                    del raw_index_values_gdf_boroughs, weighted_df, gdf_results, temperature_gdf_results, london_boroughs_over_65_gdf, gdf_boroughs, london_boroughs_over_65, buildings_data_df, buildings_data_gdf
+                    del raw_index_values_gdf_boroughs, weighted_df, gdf_results, temperature_gdf_results, london_boroughs_over_65_gdf, gdf_boroughs, london_boroughs_over_65, buildings_data_df, buildings_data_gdf, visualisation_df
 
 
 
